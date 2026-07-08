@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OFF Canada P3 — UI/UX Prototype
+
+A modern product experience built on top of [Open Food Facts](https://world.openfoodfacts.org/) data.
+
+## What This Is
+
+A UI/UX prototype exploring what a cleaner, more modern Open Food Facts product page could look like — with a focus on:
+
+- **Information architecture** — presenting dense nutrition data without overwhelming the user
+- **Plugin-based insight cards** — contextual views like Gym Mode, Parent Mode, Allergy Mode
+- **Mobile-first design** — inspired by Apple Health, Linear, and modern nutrition apps
+
+This is a frontend-only exploration. No backend, no database, no search engine — just real OFF API data presented through a thoughtful UI.
+
+## Tech Stack
+
+- [Next.js 15](https://nextjs.org/) (App Router)
+- [TypeScript](https://www.typescriptlang.org/)
+- [TailwindCSS v4](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+  page.tsx                   # Homepage — concept intro
+  products/
+    page.tsx                 # Product listing (5 curated products)
+    [barcode]/
+      page.tsx               # Product detail page
+components/
+  hero-section.tsx           # Product image, name, brand, labels
+  nutrition-overview.tsx     # Calories, macros, visual indicators
+  ingredients-panel.tsx      # Ingredients with allergen/additive highlights
+  plugin-cards.tsx           # Gym / Parent / Allergy insight cards
+  product-card.tsx           # Listing card
+lib/
+  off-api.ts                 # Open Food Facts API helpers
+  types.ts                   # Shared TypeScript types
+```
 
-## Learn More
+## Sample Products
 
-To learn more about Next.js, take a look at the following resources:
+| Product | Barcode |
+|---|---|
+| Kirkland Peanut Butter | 0096619872831 |
+| Clif Bar (Chocolate Chip) | 0722252100061 |
+| Cheerios | 0016000275287 |
+| Coca-Cola Classic | 4056489174448 |
+| Activia Strawberry Yogurt | 0056800370933 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design Principles
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Clarity over completeness** — surface what matters, hide the noise
+- **Progressive disclosure** — key info upfront, details on demand
+- **Contextual insights** — plugin cards adapt tone to the user's lens
+- **Mobile-first** — layouts that work on a phone before a desktop
 
-## Deploy on Vercel
+## Success Criteria
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Can OFF data be presented more clearly?
+2. How should plugin insights appear in the experience?
+3. What does a modern OFF product page look like?
+4. Which UI patterns improve product understanding and transparency?
