@@ -1,7 +1,7 @@
 "use client";
 
 export function GymPageOverride() {
-  const src = process.env.NEXT_PUBLIC_GYM_PLUGIN_URL ?? "http://localhost:3002";
+  const src = process.env.NEXT_PUBLIC_GYM_PLUGIN_URL ?? "https://gym-plugin-prototype.vercel.app/";
   return (
     <iframe
       src={src}
