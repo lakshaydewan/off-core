@@ -1,7 +1,7 @@
-import { Progress } from "@off/ui";
-import type { OFFProduct } from "@/lib/types";
+import { Progress } from "./progress";
+import type { OFFProduct } from "../lib/off-types";
 
-interface NutritionOverviewProps {
+export interface ProductNutritionProps {
   product: OFFProduct;
 }
 
@@ -85,7 +85,7 @@ function CalorieRing({ calories }: { calories: number }) {
   );
 }
 
-export function NutritionOverview({ product }: NutritionOverviewProps) {
+export function ProductNutrition({ product }: ProductNutritionProps) {
   const n = product.nutriments;
   if (!n) {
     return (

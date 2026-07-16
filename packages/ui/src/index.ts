@@ -28,12 +28,30 @@ export { ProductCard } from "./components/product-card";
 export type { ProductCardProps } from "./components/product-card";
 export { ProductsPage } from "./components/products-page";
 export type { ProductsPageProps } from "./components/products-page";
+export { SectionCard } from "./components/section-card";
+export type { SectionCardProps } from "./components/section-card";
+export { ProductHero } from "./components/product-hero";
+export type { ProductHeroProps } from "./components/product-hero";
+export { ProductNutrition } from "./components/product-nutrition";
+export type { ProductNutritionProps } from "./components/product-nutrition";
+export { ProductIngredients } from "./components/product-ingredients";
+export type { ProductIngredientsProps } from "./components/product-ingredients";
+export { ProductDetailPage } from "./components/product-detail-page";
+export type { ProductDetailPageProps } from "./components/product-detail-page";
 export type { OFFProduct, Nutriments } from "./lib/off-types";
 export {
   getProductName,
+  getBrand,
+  getCategory,
   getBroadCategory,
+  extractLabels,
+  extractAllergens,
+  extractAdditives,
   getNutriScorePillStyle,
   getEcoScoreBadgeStyle,
   getNovaBadgeStyle,
+  getNutriScoreColor,
+  getNutriScoreTextColor,
+  fetchProductByBarcode,
   NUTRISCORE_ORDER,
 } from "./lib/off-utils";

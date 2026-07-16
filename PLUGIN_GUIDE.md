@@ -20,7 +20,7 @@ When the user selects a plugin (e.g. "Gym"), the core app replaces the browse pa
 └─────────────────────────────────────┘
 ```
 
-The product detail page (`/products/[barcode]`) is core-only — no plugin injection. If a plugin wants a custom product view, it handles routing internally within its iframe.
+The product detail page (`/products/[barcode]`) is core-only — no plugin injection. If a plugin wants a custom product view, it handles routing internally within its iframe. It can still match the core look exactly by using the `ProductDetailPage` component from `@lakshaydewan/off-ui` — see [Using the OFF design system](#using-the-off-design-system-lakshaydewanoff-ui) below.
 
 ---
 
@@ -152,6 +152,89 @@ For product-specific data, use the Open Food Facts API directly from within the 
 const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
 const { product } = await res.json();
 ```
+
+---
+
+## Using the OFF design system (`@lakshaydewan/off-ui`)
+
+You don't have to build your product UI from scratch. The core app's own browse and
+product-detail pages are just thin wrappers around components published in
+`@lakshaydewan/off-ui` — the same package is available to plugin teams, so your
+iframe'd app can match the core look with almost no code.
+
+```bash
+npm install @lakshaydewan/off-ui
+```
+
+**Required:** import the design tokens once in your global CSS, or font sizes and
+theme tokens will be wrong:
+
+```css
+/* globals.css */
+@import "@lakshaydewan/off-ui/styles.css";
+```
+
+### Browse view — `ProductsPage`
+
+Self-fetches the OFF Canada catalog and gives you search, category filters, and
+sort for free:
+
+```tsx
+"use client";
+import { ProductsPage } from "@lakshaydewan/off-ui";
+
+export default function BrowsePage() {
+  return <ProductsPage heading="Browse" countryTag="Canada" />;
+}
+```
+
+Every layer is overridable if you need to diverge — see `ProductsPageProps`
+(`searchFn`, `renderCard`, `cardHref`, `idleSlot`, `showCategories`, `showSort`, etc.).
+
+### Product detail view — `ProductDetailPage`
+
+The core app's `/products/[barcode]` route is core-only routing-wise (see above),
+but as of `off-ui@1.6.0` the same visual page — hero, Nutri-Score/NOVA/Eco-Score,
+nutrition breakdown, ingredients with allergen highlighting — is exported so your
+plugin can build its own detail route with visual parity:
+
+```tsx
+"use client";
+import { ProductDetailPage } from "@lakshaydewan/off-ui";
+
+export default function PluginProductPage({ params }: { params: { barcode: string } }) {
+  // barcode prop → self-fetches from the Open Food Facts API client-side.
+  // Pass `product` instead if you already fetched it yourself (e.g. server-side).
+  return <ProductDetailPage barcode={params.barcode} backHref="/" />;
+}
+```
+
+**Injecting plugin-specific content:** use `extraSections` to add a contextual
+card — e.g. a Gym plugin's "fits your macros" insight — without forking the page.
+It's rendered after Ingredients, before the attribution footer, and `SectionCard`
+is exported so it matches the surrounding visual rhythm:
+
+```tsx
+import { ProductDetailPage, SectionCard } from "@lakshaydewan/off-ui";
+
+<ProductDetailPage
+  barcode={barcode}
+  extraSections={(product) => (
+    <SectionCard label="Gym Mode">
+      <p className="text-sm text-zinc-600">
+        {product.nutriments?.proteins_100g ?? 0}g protein per 100g — fits your macros.
+      </p>
+    </SectionCard>
+  )}
+/>
+```
+
+Other useful escape hatches on `ProductDetailPageProps`: `renderHero` /
+`renderNutrition` / `renderIngredients` (full replacement of a section),
+`showNutrition` / `showIngredients` / `showAttribution` (hide a section entirely),
+and `fetchFn` (override how the product is fetched). The individual sections —
+`ProductHero`, `ProductNutrition`, `ProductIngredients` — are also exported
+standalone if you'd rather compose your own layout than use the full page.
 
 ---
 

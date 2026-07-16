@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Badge } from "@off/ui";
-import { extractAllergens, extractAdditives } from "@/lib/off-api";
-import type { OFFProduct } from "@/lib/types";
+import { Badge } from "./badge";
+import { extractAllergens, extractAdditives } from "../lib/off-utils";
+import type { OFFProduct } from "../lib/off-types";
 
-interface IngredientsPanelProps {
+export interface ProductIngredientsProps {
   product: OFFProduct;
 }
 
@@ -81,7 +81,7 @@ function highlightIngredients(text: string, allergens: string[]): React.ReactEle
   );
 }
 
-export function IngredientsPanel({ product }: IngredientsPanelProps) {
+export function ProductIngredients({ product }: ProductIngredientsProps) {
   const [expanded, setExpanded] = useState(false);
   const allergens = extractAllergens(product);
   const additives = extractAdditives(product);

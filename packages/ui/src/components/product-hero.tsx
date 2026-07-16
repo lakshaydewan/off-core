@@ -1,9 +1,14 @@
-import Image from "next/image";
-import { Badge } from "@off/ui";
-import { getNutriScoreColor, extractLabels, getProductName, getBrand, getCategory } from "@/lib/off-api";
-import type { OFFProduct } from "@/lib/types";
+import { Badge } from "./badge";
+import {
+  getNutriScoreColor,
+  extractLabels,
+  getProductName,
+  getBrand,
+  getCategory,
+} from "../lib/off-utils";
+import type { OFFProduct } from "../lib/off-types";
 
-interface HeroSectionProps {
+export interface ProductHeroProps {
   product: OFFProduct;
 }
 
@@ -30,7 +35,7 @@ const ECO_DESCRIPTIONS: Record<string, string> = {
   e: "Very high environmental impact",
 };
 
-export function HeroSection({ product }: HeroSectionProps) {
+export function ProductHero({ product }: ProductHeroProps) {
   const name = getProductName(product);
   const brand = getBrand(product);
   const category = getCategory(product);
@@ -53,13 +58,11 @@ export function HeroSection({ product }: HeroSectionProps) {
       <div className="relative w-full md:w-72 md:shrink-0">
         <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#f8f8f6] border border-zinc-200/60">
           {imageUrl ? (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={imageUrl}
               alt={name}
-              fill
-              className="object-contain p-6"
-              sizes="(max-width: 768px) 100vw, 288px"
-              priority
+              className="w-full h-full object-contain p-6"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-zinc-200">

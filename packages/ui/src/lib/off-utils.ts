@@ -2,8 +2,96 @@ import type { OFFProduct } from "./off-types";
 
 export const NUTRISCORE_ORDER: Record<string, number> = { a: 0, b: 1, c: 2, d: 3, e: 4 };
 
+const OFF_API_BASE = "https://world.openfoodfacts.org/api/v2";
+
 export function getProductName(product: OFFProduct): string {
   return product.product_name_en || product.product_name || "Unknown Product";
+}
+
+export function getBrand(product: OFFProduct): string {
+  if (!product.brands) return "";
+  return product.brands.split(",")[0].trim();
+}
+
+export function getCategory(product: OFFProduct): string {
+  if (!product.categories_tags || product.categories_tags.length === 0) {
+    return product.categories ?? "";
+  }
+  const tag = product.categories_tags[product.categories_tags.length - 1];
+  return tag.replace(/^en:/, "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+export function extractLabels(product: OFFProduct): string[] {
+  if (!product.labels_tags) return [];
+  return product.labels_tags
+    .map((tag) => tag.replace("en:", "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
+    .slice(0, 6);
+}
+
+export function extractAllergens(product: OFFProduct): string[] {
+  if (!product.allergens_tags) return [];
+  return product.allergens_tags.map((tag) =>
+    tag.replace("en:", "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  );
+}
+
+export function extractAdditives(product: OFFProduct): string[] {
+  if (!product.additives_tags) return [];
+  return product.additives_tags.map((tag) => tag.replace("en:", "").toUpperCase());
+}
+
+const NUTRISCORE_SOLID: Record<string, string> = {
+  a: "bg-green-500",
+  b: "bg-lime-400",
+  c: "bg-yellow-400",
+  d: "bg-orange-400",
+  e: "bg-red-500",
+};
+
+export function getNutriScoreColor(grade?: string): string {
+  return NUTRISCORE_SOLID[grade?.toLowerCase() ?? ""] ?? "bg-gray-300";
+}
+
+const NUTRISCORE_TEXT: Record<string, string> = {
+  a: "text-green-600",
+  b: "text-lime-600",
+  c: "text-yellow-600",
+  d: "text-orange-600",
+  e: "text-red-600",
+};
+
+export function getNutriScoreTextColor(grade?: string): string {
+  return NUTRISCORE_TEXT[grade?.toLowerCase() ?? ""] ?? "text-gray-500";
+}
+
+// Client-safe fetch (no Next-specific caching options) — mirrors the fetch
+// pattern ProductsPage already uses for its self-fetching catalog mode, so
+// this can be called from either a client component or a plain browser fetch.
+// Only successful lookups are cached — a transient failure or genuine
+// "not found" is retried on the next call instead of being stuck forever.
+const _productCache = new Map<string, OFFProduct>();
+
+export async function fetchProductByBarcode(barcode: string): Promise<OFFProduct | null> {
+  const cached = _productCache.get(barcode);
+  if (cached) return cached;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10000);
+  try {
+    const res = await fetch(`${OFF_API_BASE}/product/${encodeURIComponent(barcode)}.json`, {
+      signal: controller.signal,
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.status !== 1 || !data.product) return null;
+    const product = data.product as OFFProduct;
+    _productCache.set(barcode, product);
+    return product;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 const GRADE_BADGE: Record<string, string> = {

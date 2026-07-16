@@ -499,8 +499,76 @@ import Link from "next/link";
 
 // src/lib/off-utils.ts
 var NUTRISCORE_ORDER = { a: 0, b: 1, c: 2, d: 3, e: 4 };
+var OFF_API_BASE = "https://world.openfoodfacts.org/api/v2";
 function getProductName(product) {
   return product.product_name_en || product.product_name || "Unknown Product";
+}
+function getBrand(product) {
+  if (!product.brands) return "";
+  return product.brands.split(",")[0].trim();
+}
+function getCategory(product) {
+  if (!product.categories_tags || product.categories_tags.length === 0) {
+    return product.categories ?? "";
+  }
+  const tag = product.categories_tags[product.categories_tags.length - 1];
+  return tag.replace(/^en:/, "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+function extractLabels(product) {
+  if (!product.labels_tags) return [];
+  return product.labels_tags.map((tag) => tag.replace("en:", "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())).slice(0, 6);
+}
+function extractAllergens(product) {
+  if (!product.allergens_tags) return [];
+  return product.allergens_tags.map(
+    (tag) => tag.replace("en:", "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  );
+}
+function extractAdditives(product) {
+  if (!product.additives_tags) return [];
+  return product.additives_tags.map((tag) => tag.replace("en:", "").toUpperCase());
+}
+var NUTRISCORE_SOLID = {
+  a: "bg-green-500",
+  b: "bg-lime-400",
+  c: "bg-yellow-400",
+  d: "bg-orange-400",
+  e: "bg-red-500"
+};
+function getNutriScoreColor(grade) {
+  return NUTRISCORE_SOLID[grade?.toLowerCase() ?? ""] ?? "bg-gray-300";
+}
+var NUTRISCORE_TEXT = {
+  a: "text-green-600",
+  b: "text-lime-600",
+  c: "text-yellow-600",
+  d: "text-orange-600",
+  e: "text-red-600"
+};
+function getNutriScoreTextColor(grade) {
+  return NUTRISCORE_TEXT[grade?.toLowerCase() ?? ""] ?? "text-gray-500";
+}
+var _productCache = /* @__PURE__ */ new Map();
+async function fetchProductByBarcode(barcode) {
+  const cached = _productCache.get(barcode);
+  if (cached) return cached;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 1e4);
+  try {
+    const res = await fetch(`${OFF_API_BASE}/product/${encodeURIComponent(barcode)}.json`, {
+      signal: controller.signal
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.status !== 1 || !data.product) return null;
+    const product = data.product;
+    _productCache.set(barcode, product);
+    return product;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 var GRADE_BADGE = {
   a: "bg-green-600 text-white",
@@ -682,8 +750,8 @@ var DEFAULT_FIELDS = [
   "nova_group",
   "nutriments"
 ].join(",");
-var OFF_API_BASE = "https://world.openfoodfacts.org/api/v2";
-var DEFAULT_FETCH_URL = `${OFF_API_BASE}/search?countries_tags=en:canada&page_size=50&sort_by=unique_scans_n&fields=${DEFAULT_FIELDS}`;
+var OFF_API_BASE2 = "https://world.openfoodfacts.org/api/v2";
+var DEFAULT_FETCH_URL = `${OFF_API_BASE2}/search?countries_tags=en:canada&page_size=50&sort_by=unique_scans_n&fields=${DEFAULT_FIELDS}`;
 var _catalogCache = null;
 function CardSkeleton() {
   return /* @__PURE__ */ jsxs5("div", { className: "rounded-2xl bg-white shadow-sm overflow-hidden animate-pulse", children: [
@@ -901,7 +969,7 @@ async function defaultSearchFn(query) {
     const isBarcode = /^\d{8,14}$/.test(query);
     if (isBarcode) {
       const res2 = await fetch(
-        `${OFF_API_BASE}/product/${encodeURIComponent(query)}.json`,
+        `${OFF_API_BASE2}/product/${encodeURIComponent(query)}.json`,
         { signal: controller.signal }
       );
       if (!res2.ok) return [];
@@ -928,6 +996,429 @@ async function defaultSearchFn(query) {
     clearTimeout(timer);
   }
 }
+
+// src/components/section-card.tsx
+import { jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
+function SectionCard({ label, children }) {
+  return /* @__PURE__ */ jsxs6("div", { className: "rounded-2xl border border-zinc-200/60 bg-white p-6", children: [
+    /* @__PURE__ */ jsx11("p", { className: "text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5", children: label }),
+    children
+  ] });
+}
+
+// src/components/product-hero.tsx
+import { jsx as jsx12, jsxs as jsxs7 } from "react/jsx-runtime";
+var NOVA_LABELS = {
+  1: { label: "Unprocessed", color: "bg-green-100 text-green-800", desc: "Minimal processing" },
+  2: { label: "Culinary Ingredient", color: "bg-lime-100 text-lime-800", desc: "Basic culinary ingredient" },
+  3: { label: "Processed", color: "bg-yellow-100 text-yellow-800", desc: "Added salt, sugar, or fat" },
+  4: { label: "Ultra-Processed", color: "bg-red-100 text-red-800", desc: "Industrial additives" }
+};
+var NUTRI_DESCRIPTIONS = {
+  a: "Excellent nutritional quality",
+  b: "Good nutritional quality",
+  c: "Average nutritional quality",
+  d: "Poor nutritional quality",
+  e: "Bad nutritional quality \u2014 high in fat, sugar, or salt"
+};
+var ECO_DESCRIPTIONS = {
+  a: "Very low environmental impact",
+  b: "Low environmental impact",
+  c: "Moderate environmental impact",
+  d: "High environmental impact",
+  e: "Very high environmental impact"
+};
+function ProductHero({ product }) {
+  const name = getProductName(product);
+  const brand = getBrand(product);
+  const category = getCategory(product);
+  const labels = extractLabels(product);
+  const VALID_GRADES = /* @__PURE__ */ new Set(["a", "b", "c", "d", "e"]);
+  const rawNutri = product.nutriscore_grade?.toLowerCase() ?? "";
+  const rawEco = product.ecoscore_grade?.toLowerCase().replace("a-plus", "a") ?? "";
+  const grade = VALID_GRADES.has(rawNutri) ? rawNutri : null;
+  const ecoGrade = VALID_GRADES.has(rawEco) ? rawEco : null;
+  const nova = typeof product.nova_group === "number" && product.nova_group >= 1 && product.nova_group <= 4 ? product.nova_group : null;
+  const imageUrl = product.image_front_url || product.image_url;
+  return /* @__PURE__ */ jsxs7("div", { className: "flex flex-col md:flex-row gap-8 md:gap-12 items-start", children: [
+    /* @__PURE__ */ jsxs7("div", { className: "relative w-full md:w-72 md:shrink-0", children: [
+      /* @__PURE__ */ jsx12("div", { className: "relative aspect-square rounded-2xl overflow-hidden bg-[#f8f8f6] border border-zinc-200/60", children: imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        /* @__PURE__ */ jsx12(
+          "img",
+          {
+            src: imageUrl,
+            alt: name,
+            className: "w-full h-full object-contain p-6"
+          }
+        )
+      ) : /* @__PURE__ */ jsx12("div", { className: "w-full h-full flex items-center justify-center text-zinc-200", children: /* @__PURE__ */ jsxs7("svg", { width: "80", height: "80", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1", children: [
+        /* @__PURE__ */ jsx12("rect", { x: "3", y: "3", width: "18", height: "18", rx: "2" }),
+        /* @__PURE__ */ jsx12("circle", { cx: "8.5", cy: "8.5", r: "1.5" }),
+        /* @__PURE__ */ jsx12("path", { d: "m21 15-5-5L5 21" })
+      ] }) }) }),
+      product.quantity && /* @__PURE__ */ jsx12("p", { className: "text-xs text-zinc-400 text-center mt-2", children: product.quantity })
+    ] }),
+    /* @__PURE__ */ jsxs7("div", { className: "flex-1 space-y-4", children: [
+      brand && /* @__PURE__ */ jsx12("p", { className: "text-sm font-medium text-zinc-500 uppercase tracking-widest", children: brand }),
+      /* @__PURE__ */ jsx12("h1", { className: "text-3xl md:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight", children: name }),
+      category && /* @__PURE__ */ jsx12("p", { className: "text-base text-zinc-500", children: category }),
+      (grade || nova || ecoGrade) && /* @__PURE__ */ jsxs7("div", { className: "rounded-xl border border-zinc-200/60 bg-zinc-50 grid grid-cols-3 divide-x divide-zinc-200/60 mt-2", children: [
+        /* @__PURE__ */ jsxs7("div", { className: "flex flex-col gap-2 p-4", children: [
+          /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
+            grade ? /* @__PURE__ */ jsx12("div", { className: `w-8 h-8 shrink-0 rounded-full ${getNutriScoreColor(grade)} flex items-center justify-center shadow-sm`, children: /* @__PURE__ */ jsx12("span", { className: "text-white text-sm font-bold", children: grade.toUpperCase() }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-zinc-400 text-sm font-bold", children: "?" }) }),
+            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-zinc-700", children: "Nutri-Score" })
+          ] }),
+          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-zinc-400 leading-snug", children: NUTRI_DESCRIPTIONS[grade ?? ""] ?? "Not rated" })
+        ] }),
+        /* @__PURE__ */ jsxs7("div", { className: "flex flex-col gap-2 p-4", children: [
+          /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
+            nova ? /* @__PURE__ */ jsx12("div", { className: `w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${NOVA_LABELS[nova]?.color ?? "bg-zinc-200 text-zinc-400"}`, children: /* @__PURE__ */ jsx12("span", { className: "text-sm font-bold", children: nova }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-zinc-400 text-sm font-bold", children: "?" }) }),
+            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-zinc-700", children: "NOVA" })
+          ] }),
+          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-zinc-400 leading-snug", children: nova ? NOVA_LABELS[nova]?.desc ?? "Unknown" : "Not rated" })
+        ] }),
+        /* @__PURE__ */ jsxs7("div", { className: "flex flex-col gap-2 p-4", children: [
+          /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
+            ecoGrade ? /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-[#FFA551]/20 border border-[#FFA551]/30 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-[#C47A00] text-sm font-bold uppercase", children: ecoGrade }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-zinc-400 text-sm font-bold", children: "?" }) }),
+            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-zinc-700", children: "Eco-Score" })
+          ] }),
+          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-zinc-400 leading-snug", children: ECO_DESCRIPTIONS[ecoGrade ?? ""] ?? "Not rated" })
+        ] })
+      ] }),
+      labels.length > 0 && /* @__PURE__ */ jsx12("div", { className: "flex flex-wrap gap-2", children: labels.map((label) => /* @__PURE__ */ jsx12(Badge, { variant: "outline", className: "text-xs font-normal rounded-full border-zinc-200", children: label }, label)) }),
+      product.serving_size && /* @__PURE__ */ jsxs7("p", { className: "text-xs text-zinc-400", children: [
+        "Serving size: ",
+        /* @__PURE__ */ jsx12("span", { className: "font-medium text-zinc-900", children: product.serving_size })
+      ] })
+    ] })
+  ] });
+}
+
+// src/components/product-nutrition.tsx
+import { Fragment as Fragment3, jsx as jsx13, jsxs as jsxs8 } from "react/jsx-runtime";
+function MacroCard({ label, value, unit, color, max, description }) {
+  const displayValue = value != null ? Math.round(value * 10) / 10 : null;
+  const percent = value != null ? Math.min(value / max * 100, 100) : 0;
+  return /* @__PURE__ */ jsxs8("div", { className: "p-4 rounded-xl border border-zinc-200/60 bg-white space-y-3", children: [
+    /* @__PURE__ */ jsxs8("div", { className: "flex items-start justify-between", children: [
+      /* @__PURE__ */ jsxs8("div", { children: [
+        /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-500 font-medium uppercase tracking-wide", children: label }),
+        description && /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-400 mt-0.5", children: description })
+      ] }),
+      /* @__PURE__ */ jsx13("div", { className: "text-right", children: displayValue != null ? /* @__PURE__ */ jsxs8(Fragment3, { children: [
+        /* @__PURE__ */ jsx13("span", { className: "text-xl font-semibold text-zinc-900 tabular-nums", children: displayValue }),
+        /* @__PURE__ */ jsx13("span", { className: "text-xs text-zinc-400 ml-1", children: unit })
+      ] }) : /* @__PURE__ */ jsx13("span", { className: "text-sm text-zinc-400", children: "\u2014" }) })
+    ] }),
+    /* @__PURE__ */ jsx13(
+      Progress,
+      {
+        value: percent,
+        className: "h-1.5",
+        style: { "--progress-color": color }
+      }
+    ),
+    /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-400", children: "per 100g" })
+  ] });
+}
+function CalorieRing({ calories }) {
+  const dailyTarget = 2e3;
+  const percent = Math.min(calories / dailyTarget * 100, 100);
+  const circumference = 2 * Math.PI * 40;
+  const strokeDash = percent / 100 * circumference;
+  return /* @__PURE__ */ jsxs8("div", { className: "p-5 rounded-xl border border-zinc-200/60 bg-white flex items-center gap-5", children: [
+    /* @__PURE__ */ jsxs8("div", { className: "relative w-24 h-24 shrink-0", children: [
+      /* @__PURE__ */ jsxs8("svg", { viewBox: "0 0 100 100", className: "w-full h-full -rotate-90", children: [
+        /* @__PURE__ */ jsx13("circle", { cx: "50", cy: "50", r: "40", fill: "none", stroke: "currentColor", strokeWidth: "8", className: "text-zinc-200" }),
+        /* @__PURE__ */ jsx13(
+          "circle",
+          {
+            cx: "50",
+            cy: "50",
+            r: "40",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "8",
+            strokeLinecap: "round",
+            strokeDasharray: `${strokeDash} ${circumference}`,
+            className: "text-orange-400 transition-all duration-700"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs8("div", { className: "absolute inset-0 flex flex-col items-center justify-center", children: [
+        /* @__PURE__ */ jsx13("span", { className: "text-lg font-bold tabular-nums", children: Math.round(calories) }),
+        /* @__PURE__ */ jsx13("span", { className: "text-xs text-zinc-400", children: "kcal" })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs8("div", { className: "space-y-1", children: [
+      /* @__PURE__ */ jsx13("p", { className: "font-semibold text-zinc-900", children: "Calories" }),
+      /* @__PURE__ */ jsx13("p", { className: "text-sm text-zinc-500", children: "per 100g" }),
+      /* @__PURE__ */ jsxs8("p", { className: "text-xs text-zinc-400", children: [
+        Math.round(percent),
+        "% of ",
+        dailyTarget.toLocaleString(),
+        " kcal daily reference"
+      ] })
+    ] })
+  ] });
+}
+function ProductNutrition({ product }) {
+  const n = product.nutriments;
+  if (!n) {
+    return /* @__PURE__ */ jsx13("div", { className: "text-center py-10 text-zinc-500", children: /* @__PURE__ */ jsx13("p", { children: "Nutrition data not available for this product." }) });
+  }
+  const calories = n.energy_kcal_100g;
+  return /* @__PURE__ */ jsxs8("div", { className: "space-y-4", children: [
+    /* @__PURE__ */ jsx13("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-400", children: "All values per 100g unless noted" }) }),
+    calories != null && /* @__PURE__ */ jsx13(CalorieRing, { calories }),
+    /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-2 gap-3", children: [
+      /* @__PURE__ */ jsx13(MacroCard, { label: "Protein", value: n.proteins_100g, unit: "g", color: "#4ade80", max: 30, description: "Muscle & repair" }),
+      /* @__PURE__ */ jsx13(MacroCard, { label: "Carbs", value: n.carbohydrates_100g, unit: "g", color: "#60a5fa", max: 100, description: "Primary energy" }),
+      /* @__PURE__ */ jsx13(MacroCard, { label: "of which Sugars", value: n.sugars_100g, unit: "g", color: "#f97316", max: 50 }),
+      /* @__PURE__ */ jsx13(MacroCard, { label: "Fat", value: n.fat_100g, unit: "g", color: "#a78bfa", max: 50 }),
+      /* @__PURE__ */ jsx13(MacroCard, { label: "Saturated Fat", value: n.saturated_fat_100g, unit: "g", color: "#fb7185", max: 20 }),
+      /* @__PURE__ */ jsx13(MacroCard, { label: "Fiber", value: n.fiber_100g, unit: "g", color: "#34d399", max: 15, description: "Digestive health" })
+    ] }),
+    (n.sodium_100g != null || n.salt_100g != null) && /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-2 gap-3", children: [
+      n.sodium_100g != null && /* @__PURE__ */ jsx13(MacroCard, { label: "Sodium", value: n.sodium_100g * 1e3, unit: "mg", color: "#fbbf24", max: 500 }),
+      n.salt_100g != null && /* @__PURE__ */ jsx13(MacroCard, { label: "Salt", value: n.salt_100g, unit: "g", color: "#94a3b8", max: 3 })
+    ] })
+  ] });
+}
+
+// src/components/product-ingredients.tsx
+import { useState as useState2 } from "react";
+import { Fragment as Fragment4, jsx as jsx14, jsxs as jsxs9 } from "react/jsx-runtime";
+var ALLERGEN_HIGHLIGHT_WORDS = [
+  "peanut",
+  "milk",
+  "egg",
+  "wheat",
+  "soy",
+  "gluten",
+  "tree nut",
+  "shellfish",
+  "fish",
+  "sesame",
+  "almond",
+  "cashew",
+  "walnut",
+  "pecan",
+  "hazelnut",
+  "pistachio",
+  "lactose",
+  "dairy"
+];
+function highlightIngredients(text, allergens) {
+  if (!text) return /* @__PURE__ */ jsx14(Fragment4, {});
+  const lowerText = text.toLowerCase();
+  const parts = [];
+  let lastIndex = 0;
+  const wordsToHighlight = [
+    ...ALLERGEN_HIGHLIGHT_WORDS,
+    ...allergens.map((a) => a.toLowerCase())
+  ];
+  const positions = [];
+  for (const word of wordsToHighlight) {
+    let idx = lowerText.indexOf(word, 0);
+    while (idx !== -1) {
+      positions.push({ start: idx, end: idx + word.length });
+      idx = lowerText.indexOf(word, idx + 1);
+    }
+  }
+  positions.sort((a, b) => a.start - b.start);
+  const merged = [];
+  for (const pos of positions) {
+    if (merged.length === 0 || pos.start > merged[merged.length - 1].end) {
+      merged.push({ ...pos });
+    } else {
+      merged[merged.length - 1].end = Math.max(merged[merged.length - 1].end, pos.end);
+    }
+  }
+  for (const { start, end } of merged) {
+    if (start > lastIndex) {
+      parts.push({ text: text.slice(lastIndex, start), isAllergen: false });
+    }
+    parts.push({ text: text.slice(start, end), isAllergen: true });
+    lastIndex = end;
+  }
+  if (lastIndex < text.length) {
+    parts.push({ text: text.slice(lastIndex), isAllergen: false });
+  }
+  if (parts.length === 0) {
+    return /* @__PURE__ */ jsx14("span", { children: text });
+  }
+  return /* @__PURE__ */ jsx14(Fragment4, { children: parts.map(
+    (part, i) => part.isAllergen ? /* @__PURE__ */ jsx14(
+      "mark",
+      {
+        className: "bg-amber-100 text-amber-900 rounded px-0.5 not-italic font-medium",
+        children: part.text
+      },
+      i
+    ) : /* @__PURE__ */ jsx14("span", { children: part.text }, i)
+  ) });
+}
+function ProductIngredients({ product }) {
+  const [expanded, setExpanded] = useState2(false);
+  const allergens = extractAllergens(product);
+  const additives = extractAdditives(product);
+  const text = product.ingredients_text_en || product.ingredients_text || "";
+  const isLong = text.length > 300;
+  return /* @__PURE__ */ jsxs9("div", { className: "space-y-5", children: [
+    allergens.length > 0 && /* @__PURE__ */ jsxs9("div", { className: "p-4 rounded-xl border border-amber-200 bg-amber-50 space-y-2", children: [
+      /* @__PURE__ */ jsxs9("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxs9("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", className: "text-amber-600", children: [
+          /* @__PURE__ */ jsx14("path", { d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" }),
+          /* @__PURE__ */ jsx14("path", { d: "M12 9v4" }),
+          /* @__PURE__ */ jsx14("path", { d: "M12 17h.01" })
+        ] }),
+        /* @__PURE__ */ jsx14("p", { className: "text-sm font-semibold text-amber-800", children: "Allergen Information" })
+      ] }),
+      /* @__PURE__ */ jsx14("div", { className: "flex flex-wrap gap-1.5", children: allergens.map((a) => /* @__PURE__ */ jsx14(Badge, { className: "bg-amber-200 text-amber-900 hover:bg-amber-200 text-xs font-medium border-0", children: a }, a)) })
+    ] }),
+    text ? /* @__PURE__ */ jsxs9("div", { className: "space-y-2", children: [
+      /* @__PURE__ */ jsx14("h3", { className: "text-sm font-semibold text-zinc-900", children: "Ingredients" }),
+      /* @__PURE__ */ jsxs9("div", { className: "text-sm text-zinc-500 leading-relaxed", children: [
+        /* @__PURE__ */ jsx14("p", { className: !expanded && isLong ? "line-clamp-4" : "", children: highlightIngredients(text, allergens) }),
+        isLong && /* @__PURE__ */ jsx14(
+          "button",
+          {
+            onClick: () => setExpanded(!expanded),
+            className: "text-xs text-[#FFA551] font-medium mt-2 hover:underline",
+            children: expanded ? "Show less" : "Show full ingredients"
+          }
+        )
+      ] }),
+      allergens.length > 0 && /* @__PURE__ */ jsx14("p", { className: "text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg inline-block", children: "Highlighted ingredients may contain allergens" })
+    ] }) : /* @__PURE__ */ jsx14("p", { className: "text-sm text-zinc-400", children: "Ingredients list not available." }),
+    additives.length > 0 && /* @__PURE__ */ jsxs9("div", { className: "space-y-2", children: [
+      /* @__PURE__ */ jsx14("h3", { className: "text-sm font-semibold text-zinc-900", children: "Additives" }),
+      /* @__PURE__ */ jsx14("div", { className: "flex flex-wrap gap-1.5", children: additives.map((a) => /* @__PURE__ */ jsx14(Badge, { variant: "outline", className: "text-xs font-mono text-zinc-500 border-zinc-200/60", children: a }, a)) }),
+      /* @__PURE__ */ jsxs9("p", { className: "text-xs text-zinc-400", children: [
+        additives.length,
+        " additive",
+        additives.length !== 1 ? "s" : "",
+        " detected"
+      ] })
+    ] })
+  ] });
+}
+
+// src/components/product-detail-page.tsx
+import { useEffect as useEffect2, useState as useState3 } from "react";
+import { Fragment as Fragment5, jsx as jsx15, jsxs as jsxs10 } from "react/jsx-runtime";
+function DefaultSkeleton() {
+  return /* @__PURE__ */ jsxs10("div", { className: "space-y-4 animate-pulse", children: [
+    /* @__PURE__ */ jsx15("div", { className: "rounded-2xl border border-zinc-200/60 bg-white p-6", children: /* @__PURE__ */ jsxs10("div", { className: "flex flex-col md:flex-row gap-8 md:gap-12 items-start", children: [
+      /* @__PURE__ */ jsx15("div", { className: "w-full md:w-72 md:shrink-0 aspect-square rounded-2xl bg-zinc-100" }),
+      /* @__PURE__ */ jsxs10("div", { className: "flex-1 space-y-4 w-full", children: [
+        /* @__PURE__ */ jsx15("div", { className: "h-3 w-24 bg-zinc-100 rounded" }),
+        /* @__PURE__ */ jsx15("div", { className: "h-8 w-2/3 bg-zinc-100 rounded" }),
+        /* @__PURE__ */ jsx15("div", { className: "h-4 w-1/3 bg-zinc-100 rounded" }),
+        /* @__PURE__ */ jsx15("div", { className: "h-20 w-full bg-zinc-100 rounded-xl" })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsx15("div", { className: "h-40 rounded-2xl bg-zinc-100" }),
+    /* @__PURE__ */ jsx15("div", { className: "h-40 rounded-2xl bg-zinc-100" })
+  ] });
+}
+function DefaultNotFound({ backHref, backLabel }) {
+  return /* @__PURE__ */ jsxs10("div", { className: "text-center py-20 space-y-3", children: [
+    /* @__PURE__ */ jsx15("p", { className: "text-zinc-500 font-medium", children: "Product not found" }),
+    /* @__PURE__ */ jsx15("p", { className: "text-sm text-zinc-400", children: "Check the barcode and try again." }),
+    /* @__PURE__ */ jsx15(
+      "a",
+      {
+        href: backHref,
+        className: "text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors inline-block",
+        children: backLabel
+      }
+    )
+  ] });
+}
+function ProductDetailPage({
+  product,
+  barcode,
+  fetchFn,
+  showNutrition = true,
+  showIngredients = true,
+  showAttribution = true,
+  renderHero,
+  renderNutrition,
+  renderIngredients,
+  extraSections,
+  backHref = "/products",
+  backLabel = "Back to all products",
+  loadingSlot,
+  notFoundSlot
+}) {
+  const isSelfFetching = product === void 0;
+  const [fetchedProduct, setFetchedProduct] = useState3(
+    isSelfFetching ? void 0 : product
+  );
+  useEffect2(() => {
+    if (!isSelfFetching) {
+      setFetchedProduct(product);
+      return;
+    }
+    if (!barcode) {
+      setFetchedProduct(null);
+      return;
+    }
+    let cancelled = false;
+    setFetchedProduct(void 0);
+    const fn = fetchFn ?? fetchProductByBarcode;
+    fn(barcode).then((result) => {
+      if (!cancelled) setFetchedProduct(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSelfFetching, product, barcode, fetchFn]);
+  if (fetchedProduct === void 0) {
+    return /* @__PURE__ */ jsx15(Fragment5, { children: loadingSlot ?? /* @__PURE__ */ jsx15(DefaultSkeleton, {}) });
+  }
+  if (fetchedProduct === null) {
+    return /* @__PURE__ */ jsx15(Fragment5, { children: notFoundSlot ?? /* @__PURE__ */ jsx15(DefaultNotFound, { backHref, backLabel }) });
+  }
+  const resolvedProduct = fetchedProduct;
+  return /* @__PURE__ */ jsxs10("div", { className: "space-y-4", children: [
+    /* @__PURE__ */ jsx15("div", { className: "rounded-2xl border border-zinc-200/60 bg-white p-6", children: renderHero ? renderHero(resolvedProduct) : /* @__PURE__ */ jsx15(ProductHero, { product: resolvedProduct }) }),
+    showNutrition && /* @__PURE__ */ jsx15(SectionCard, { label: "Nutrition", children: renderNutrition ? renderNutrition(resolvedProduct) : /* @__PURE__ */ jsx15(ProductNutrition, { product: resolvedProduct }) }),
+    showIngredients && /* @__PURE__ */ jsx15(SectionCard, { label: "Ingredients", children: renderIngredients ? renderIngredients(resolvedProduct) : /* @__PURE__ */ jsx15(ProductIngredients, { product: resolvedProduct }) }),
+    extraSections?.(resolvedProduct),
+    showAttribution && /* @__PURE__ */ jsxs10("div", { className: "pt-2 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxs10("div", { className: "space-y-1 text-xs text-zinc-400", children: [
+        /* @__PURE__ */ jsxs10("p", { children: [
+          "Barcode: ",
+          /* @__PURE__ */ jsx15("span", { className: "font-mono font-medium text-zinc-600", children: resolvedProduct.code })
+        ] }),
+        /* @__PURE__ */ jsxs10("p", { children: [
+          "Data from",
+          " ",
+          /* @__PURE__ */ jsx15(
+            "a",
+            {
+              href: `https://world.openfoodfacts.org/product/${resolvedProduct.code}`,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "underline underline-offset-2 hover:text-zinc-700 transition-colors",
+              children: "Open Food Facts \u2197"
+            }
+          ),
+          " ",
+          "\xB7 ODbL license"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs10("a", { href: backHref, className: "text-xs text-zinc-400 hover:text-zinc-700 transition-colors", children: [
+        "\u2190 ",
+        backLabel
+      ] })
+    ] })
+  ] });
+}
 export {
   Badge,
   Button,
@@ -941,6 +1432,10 @@ export {
   NUTRISCORE_ORDER,
   PageHeader,
   ProductCard,
+  ProductDetailPage,
+  ProductHero,
+  ProductIngredients,
+  ProductNutrition,
   ProductsPage,
   ProductsToolbar,
   Progress,
@@ -948,6 +1443,7 @@ export {
   ProgressLabel,
   ProgressTrack,
   ProgressValue,
+  SectionCard,
   Separator,
   Skeleton,
   Tabs,
@@ -957,10 +1453,18 @@ export {
   badgeVariants,
   buttonVariants,
   cn,
+  extractAdditives,
+  extractAllergens,
+  extractLabels,
+  fetchProductByBarcode,
+  getBrand,
   getBroadCategory,
+  getCategory,
   getEcoScoreBadgeStyle,
   getNovaBadgeStyle,
+  getNutriScoreColor,
   getNutriScorePillStyle,
+  getNutriScoreTextColor,
   getProductName,
   tabsListVariants
 };

@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { HeroSection } from "@/components/hero-section";
-import { NutritionOverview } from "@/components/nutrition-overview";
-import { IngredientsPanel } from "@/components/ingredients-panel";
+import { ProductDetailPage as OffProductDetailPage } from "@off/ui";
 import { SettingsButton } from "@/components/settings-button";
 import { fetchProduct, CURATED_PRODUCTS } from "@/lib/off-api";
 
@@ -15,15 +13,6 @@ export async function generateStaticParams() {
 
 interface PageProps {
   params: Promise<{ barcode: string }>;
-}
-
-function SectionCard({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-zinc-200/60 bg-white p-6">
-      <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">{label}</p>
-      {children}
-    </div>
-  );
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
@@ -60,45 +49,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-4">
-        {/* Hero */}
-        <div className="rounded-2xl border border-zinc-200/60 bg-white p-6">
-          <HeroSection product={product} />
-        </div>
-
-        {/* Nutrition */}
-        <SectionCard label="Nutrition">
-          <NutritionOverview product={product} />
-        </SectionCard>
-
-        {/* Ingredients */}
-        <SectionCard label="Ingredients">
-          <IngredientsPanel product={product} />
-        </SectionCard>
-
-        {/* Attribution */}
-        <div className="pt-2 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="space-y-1 text-xs text-zinc-400">
-            <p>
-              Barcode: <span className="font-mono font-medium text-zinc-600">{barcode}</span>
-            </p>
-            <p>
-              Data from{" "}
-              <a
-                href={`https://world.openfoodfacts.org/product/${barcode}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-zinc-700 transition-colors"
-              >
-                Open Food Facts ↗
-              </a>{" "}
-              · ODbL license
-            </p>
-          </div>
-          <Link href="/products" className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
-            ← Back to all products
-          </Link>
-        </div>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+        <OffProductDetailPage product={product} backHref="/products" />
       </main>
     </div>
   );

@@ -1,9 +1,5 @@
 import type { OFFApiResponse, OFFProduct, OFFSearchResponse, CuratedProduct } from "./types";
 
-export function getProductName(product: OFFProduct): string {
-  return product.product_name_en || product.product_name || "Unknown Product";
-}
-
 const BASE_URL = "https://world.openfoodfacts.org/api/v2";
 
 export async function fetchProduct(barcode: string): Promise<OFFProduct | null> {
@@ -28,17 +24,6 @@ export const CURATED_PRODUCTS: CuratedProduct[] = [
   { barcode: "0056800370933", displayName: "Activia Strawberry Yogurt", category: "Yogurt" },
 ];
 
-export function getNutriScoreColor(grade?: string): string {
-  const colors: Record<string, string> = {
-    a: "bg-green-500",
-    b: "bg-lime-400",
-    c: "bg-yellow-400",
-    d: "bg-orange-400",
-    e: "bg-red-500",
-  };
-  return colors[grade?.toLowerCase() ?? ""] ?? "bg-gray-300";
-}
-
 export function getNutriScoreTextColor(grade?: string): string {
   const colors: Record<string, string> = {
     a: "text-green-600",
@@ -48,38 +33,6 @@ export function getNutriScoreTextColor(grade?: string): string {
     e: "text-red-600",
   };
   return colors[grade?.toLowerCase() ?? ""] ?? "text-gray-500";
-}
-
-export function extractAllergens(product: OFFProduct): string[] {
-  if (!product.allergens_tags) return [];
-  return product.allergens_tags.map((tag) =>
-    tag.replace("en:", "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-  );
-}
-
-export function extractAdditives(product: OFFProduct): string[] {
-  if (!product.additives_tags) return [];
-  return product.additives_tags.map((tag) => tag.replace("en:", "").toUpperCase());
-}
-
-export function extractLabels(product: OFFProduct): string[] {
-  if (!product.labels_tags) return [];
-  return product.labels_tags
-    .map((tag) => tag.replace("en:", "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
-    .slice(0, 6);
-}
-
-export function getBrand(product: OFFProduct): string {
-  if (!product.brands) return "";
-  return product.brands.split(",")[0].trim();
-}
-
-export function getCategory(product: OFFProduct): string {
-  if (!product.categories_tags || product.categories_tags.length === 0) {
-    return product.categories ?? "";
-  }
-  const tag = product.categories_tags[product.categories_tags.length - 1];
-  return tag.replace(/^en:/, "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export async function searchProducts(query: string): Promise<OFFProduct[]> {

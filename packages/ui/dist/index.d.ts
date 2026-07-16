@@ -1,4 +1,5 @@
 import * as react from 'react';
+import { ReactNode } from 'react';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { useRender } from '@base-ui/react/use-render';
 import { VariantProps } from 'class-variance-authority';
@@ -180,11 +181,84 @@ interface ProductsPageProps {
 }
 declare function ProductsPage({ products, heading, countryTag, subtitle, searchFn, initialQuery, showResultsOnMount, showCategories, showSort, stickyTop, renderCard, cardHref, idleSlot, }: ProductsPageProps): react.JSX.Element;
 
+interface SectionCardProps {
+    label: string;
+    children: ReactNode;
+}
+declare function SectionCard({ label, children }: SectionCardProps): react.JSX.Element;
+
+interface ProductHeroProps {
+    product: OFFProduct;
+}
+declare function ProductHero({ product }: ProductHeroProps): react.JSX.Element;
+
+interface ProductNutritionProps {
+    product: OFFProduct;
+}
+declare function ProductNutrition({ product }: ProductNutritionProps): react.JSX.Element;
+
+interface ProductIngredientsProps {
+    product: OFFProduct;
+}
+declare function ProductIngredients({ product }: ProductIngredientsProps): react.JSX.Element;
+
+interface ProductDetailPageProps {
+    /**
+     * Pass an already-resolved product for controlled mode — e.g. a Next.js
+     * server component that fetched the product itself (with its own ISR/SSG).
+     * Takes priority over `barcode`.
+     */
+    product?: OFFProduct;
+    /**
+     * Or pass a barcode and let the component self-fetch client-side against
+     * the Open Food Facts API. Ignored when `product` is provided.
+     */
+    barcode?: string;
+    /**
+     * Override the self-fetch. Receives the barcode; should resolve to the
+     * product or null (not found). Defaults to the Open Food Facts API.
+     */
+    fetchFn?: (barcode: string) => Promise<OFFProduct | null>;
+    /** Show the nutrition section. Defaults to true. */
+    showNutrition?: boolean;
+    /** Show the ingredients section. Defaults to true. */
+    showIngredients?: boolean;
+    /** Show the barcode/attribution footer. Defaults to true. */
+    showAttribution?: boolean;
+    renderHero?: (product: OFFProduct) => React.ReactNode;
+    renderNutrition?: (product: OFFProduct) => React.ReactNode;
+    renderIngredients?: (product: OFFProduct) => React.ReactNode;
+    /**
+     * Rendered after Ingredients, before the attribution footer. This is the
+     * hook for plugin-specific content — e.g. a "fits your macros" card —
+     * without needing to fork the whole page. Wrap it in `SectionCard` to
+     * match the surrounding visual rhythm.
+     */
+    extraSections?: (product: OFFProduct) => React.ReactNode;
+    /** Href for the "back to products" link. Defaults to "/products". */
+    backHref?: string;
+    /** Label for the back link. Defaults to "Back to all products". */
+    backLabel?: string;
+    /** Rendered while self-fetching. Defaults to a skeleton matching the layout. */
+    loadingSlot?: React.ReactNode;
+    /** Rendered when the product can't be found. */
+    notFoundSlot?: React.ReactNode;
+}
+declare function ProductDetailPage({ product, barcode, fetchFn, showNutrition, showIngredients, showAttribution, renderHero, renderNutrition, renderIngredients, extraSections, backHref, backLabel, loadingSlot, notFoundSlot, }: ProductDetailPageProps): react.JSX.Element;
+
 declare const NUTRISCORE_ORDER: Record<string, number>;
 declare function getProductName(product: OFFProduct): string;
+declare function getBrand(product: OFFProduct): string;
+declare function getCategory(product: OFFProduct): string;
+declare function extractLabels(product: OFFProduct): string[];
+declare function extractAllergens(product: OFFProduct): string[];
+declare function extractAdditives(product: OFFProduct): string[];
+declare function getNutriScoreColor(grade?: string): string;
+declare function getNutriScoreTextColor(grade?: string): string;
+declare function fetchProductByBarcode(barcode: string): Promise<OFFProduct | null>;
 declare function getNutriScorePillStyle(grade?: string): string;
 declare function getEcoScoreBadgeStyle(grade?: string): string;
 declare function getNovaBadgeStyle(nova?: number): string;
 declare function getBroadCategory(product: OFFProduct): string;
 
-export { Badge, Button, Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, NUTRISCORE_ORDER, type Nutriments, type OFFProduct, PageHeader, type PageHeaderProps, ProductCard, type ProductCardProps, ProductsPage, type ProductsPageProps, ProductsToolbar, type ProductsToolbarProps, Progress, ProgressIndicator, ProgressLabel, ProgressTrack, ProgressValue, Separator, Skeleton, type SortKey, Tabs, TabsContent, TabsList, TabsTrigger, badgeVariants, buttonVariants, cn, getBroadCategory, getEcoScoreBadgeStyle, getNovaBadgeStyle, getNutriScorePillStyle, getProductName, tabsListVariants };
+export { Badge, Button, Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, NUTRISCORE_ORDER, type Nutriments, type OFFProduct, PageHeader, type PageHeaderProps, ProductCard, type ProductCardProps, ProductDetailPage, type ProductDetailPageProps, ProductHero, type ProductHeroProps, ProductIngredients, type ProductIngredientsProps, ProductNutrition, type ProductNutritionProps, ProductsPage, type ProductsPageProps, ProductsToolbar, type ProductsToolbarProps, Progress, ProgressIndicator, ProgressLabel, ProgressTrack, ProgressValue, SectionCard, type SectionCardProps, Separator, Skeleton, type SortKey, Tabs, TabsContent, TabsList, TabsTrigger, badgeVariants, buttonVariants, cn, extractAdditives, extractAllergens, extractLabels, fetchProductByBarcode, getBrand, getBroadCategory, getCategory, getEcoScoreBadgeStyle, getNovaBadgeStyle, getNutriScoreColor, getNutriScorePillStyle, getNutriScoreTextColor, getProductName, tabsListVariants };
