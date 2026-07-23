@@ -420,7 +420,7 @@ function ProductsToolbar({
       {
         value: sort,
         onChange: (e) => onSortChange(e.target.value),
-        className: "appearance-none bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-700 text-xs font-medium pl-3 pr-6 py-1.5 rounded-full cursor-pointer focus:outline-none transition-colors",
+        className: "appearance-none bg-muted hover:bg-accent text-muted-foreground hover:text-foreground text-xs font-medium pl-3 pr-6 py-1.5 rounded-full cursor-pointer focus:outline-none transition-colors",
         children: [
           /* @__PURE__ */ jsx7("option", { value: "default", children: "Popular" }),
           /* @__PURE__ */ jsx7("option", { value: "name", children: "A \u2013 Z" }),
@@ -429,11 +429,11 @@ function ProductsToolbar({
         ]
       }
     ),
-    /* @__PURE__ */ jsx7(ChevronIcon, { className: "absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-400 pointer-events-none" })
+    /* @__PURE__ */ jsx7(ChevronIcon, { className: "absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" })
   ] });
-  return /* @__PURE__ */ jsxs2("div", { className: `sticky ${stickyTop} z-20 bg-zinc-50 pt-2 pb-4 space-y-3 -mx-4 px-4 sm:-mx-6 sm:px-6`, children: [
+  return /* @__PURE__ */ jsxs2("div", { className: `sticky ${stickyTop} z-20 bg-background pt-2 pb-4 space-y-3 -mx-4 px-4 sm:-mx-6 sm:px-6`, children: [
     /* @__PURE__ */ jsxs2("div", { className: "relative", children: [
-      /* @__PURE__ */ jsx7(SearchIcon, { className: "absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" }),
+      /* @__PURE__ */ jsx7(SearchIcon, { className: "absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" }),
       /* @__PURE__ */ jsx7(
         "input",
         {
@@ -442,23 +442,23 @@ function ProductsToolbar({
           value: searchQuery,
           onChange: (e) => onSearchChange(e.target.value),
           placeholder: "Search by name or barcode\u2026",
-          className: "w-full h-10 bg-white rounded-xl border border-zinc-200 pl-10 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#FFA551]/20 focus:border-[#FFA551]/50 transition-colors shadow-sm"
+          className: "w-full h-10 bg-card rounded-xl border border-border pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-colors shadow-sm"
         }
       ),
-      isSearching ? /* @__PURE__ */ jsx7("div", { className: "absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-zinc-200 border-t-[#FFA551] animate-spin" }) : searchQuery ? /* @__PURE__ */ jsx7(
+      isSearching ? /* @__PURE__ */ jsx7("div", { className: "absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-border border-t-primary animate-spin" }) : searchQuery ? /* @__PURE__ */ jsx7(
         "button",
         {
           onClick: () => {
             onSearchChange("");
             inputRef.current?.focus();
           },
-          className: "absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 transition-colors",
-          children: /* @__PURE__ */ jsx7(XIcon, { className: "w-3 h-3 text-zinc-600" })
+          className: "absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-muted hover:bg-accent transition-colors",
+          children: /* @__PURE__ */ jsx7(XIcon, { className: "w-3 h-3 text-foreground" })
         }
       ) : null
     ] }),
     isSearchMode ? (showSort || !isSearching) && /* @__PURE__ */ jsxs2("div", { className: "flex items-center justify-between gap-3", children: [
-      /* @__PURE__ */ jsx7("p", { className: "text-sm text-zinc-500", children: isSearching ? "Searching\u2026" : isBarcode ? resultCount === 0 ? `No product found for barcode ${searchQuery.trim()}` : "Barcode result" : `${resultCount} result${resultCount !== 1 ? "s" : ""} for "${searchQuery}"` }),
+      /* @__PURE__ */ jsx7("p", { className: "text-sm text-muted-foreground", children: isSearching ? "Searching\u2026" : isBarcode ? resultCount === 0 ? `No product found for barcode ${searchQuery.trim()}` : "Barcode result" : `${resultCount} result${resultCount !== 1 ? "s" : ""} for "${searchQuery}"` }),
       showSort && sortControl
     ] }) : showCategories || showSort ? /* @__PURE__ */ jsxs2("div", { className: "flex items-center gap-3", children: [
       showCategories && /* @__PURE__ */ jsx7("div", { className: "flex gap-1.5 overflow-x-auto scrollbar-none flex-1 min-w-0 pb-0.5", children: categories.map((cat) => /* @__PURE__ */ jsx7(
@@ -467,7 +467,7 @@ function ProductsToolbar({
           onClick: () => onCategoryChange(cat),
           className: cn(
             "shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap",
-            activeCategory === cat ? "bg-[#FFA551] text-white shadow-sm" : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700"
+            activeCategory === cat ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
           ),
           children: cat
         },
@@ -476,8 +476,8 @@ function ProductsToolbar({
       showSort && sortControl
     ] }) : null,
     /* @__PURE__ */ jsxs2("div", { className: "flex items-center gap-3", children: [
-      /* @__PURE__ */ jsx7("div", { className: "flex-1 h-px bg-zinc-200" }),
-      !isSearchMode && /* @__PURE__ */ jsx7("p", { className: "text-[11px] text-zinc-400 shrink-0", children: resultCount === totalCount ? `${totalCount} products` : `${resultCount} of ${totalCount}` })
+      /* @__PURE__ */ jsx7("div", { className: "flex-1 h-px bg-border" }),
+      !isSearchMode && /* @__PURE__ */ jsx7("p", { className: "text-[11px] text-muted-foreground shrink-0", children: resultCount === totalCount ? `${totalCount} products` : `${resultCount} of ${totalCount}` })
     ] })
   ] });
 }
@@ -487,10 +487,10 @@ import { jsx as jsx8, jsxs as jsxs3 } from "react/jsx-runtime";
 function PageHeader({ heading, countryTag, subtitle }) {
   return /* @__PURE__ */ jsxs3("div", { children: [
     /* @__PURE__ */ jsxs3("div", { className: "flex items-center gap-2", children: [
-      /* @__PURE__ */ jsx8("h1", { className: "text-xl font-semibold text-zinc-900 tracking-tight", children: heading }),
-      countryTag && /* @__PURE__ */ jsx8("span", { className: "px-2 py-0.5 rounded-full bg-[#FFA551]/20 text-[#C47A00] text-xs font-medium", children: countryTag })
+      /* @__PURE__ */ jsx8("h1", { className: "text-xl font-semibold text-foreground tracking-tight", children: heading }),
+      countryTag && /* @__PURE__ */ jsx8("span", { className: "px-2 py-0.5 rounded-full bg-primary/20 text-primary text-xs font-medium", children: countryTag })
     ] }),
-    subtitle && /* @__PURE__ */ jsx8("p", { className: "text-sm text-zinc-400 mt-0.5", children: subtitle })
+    subtitle && /* @__PURE__ */ jsx8("p", { className: "text-sm text-muted-foreground mt-0.5", children: subtitle })
   ] });
 }
 
@@ -577,7 +577,7 @@ var GRADE_BADGE = {
   d: "bg-orange-500 text-white",
   e: "bg-red-500 text-white"
 };
-var GRADE_BADGE_MISSING = "bg-zinc-100 text-zinc-400";
+var GRADE_BADGE_MISSING = "bg-muted text-muted-foreground";
 function getNutriScorePillStyle(grade) {
   return GRADE_BADGE[grade?.toLowerCase() ?? ""] ?? GRADE_BADGE_MISSING;
 }
@@ -643,7 +643,7 @@ var ECO_TIPS = {
 function ScoreBadge({ label, value, style, tip }) {
   const isMissing = value === "\u2014";
   return /* @__PURE__ */ jsxs4("div", { className: "relative group/score flex-1", children: [
-    isMissing ? /* @__PURE__ */ jsx9("div", { className: "flex items-center justify-center py-1.5 rounded-lg bg-zinc-100 w-full", children: /* @__PURE__ */ jsx9("span", { className: "text-[10px] font-medium text-zinc-300", children: "?" }) }) : /* @__PURE__ */ jsxs4("div", { className: `flex items-center justify-between px-2 py-1.5 rounded-lg text-[10px] w-full ${style}`, children: [
+    isMissing ? /* @__PURE__ */ jsx9("div", { className: "flex items-center justify-center py-1.5 rounded-lg bg-muted w-full", children: /* @__PURE__ */ jsx9("span", { className: "text-[10px] font-medium text-muted-foreground", children: "?" }) }) : /* @__PURE__ */ jsxs4("div", { className: `flex items-center justify-between px-2 py-1.5 rounded-lg text-[10px] w-full ${style}`, children: [
       /* @__PURE__ */ jsx9("span", { className: "font-medium opacity-70", children: label }),
       /* @__PURE__ */ jsx9("span", { className: "font-bold", children: value })
     ] }),
@@ -652,11 +652,11 @@ function ScoreBadge({ label, value, style, tip }) {
       {
         className: "\n          absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 z-50\n          pointer-events-none select-none\n          opacity-0 group-hover/score:opacity-100\n          scale-95 group-hover/score:scale-100\n          transition-all duration-150 ease-out\n        ",
         children: [
-          /* @__PURE__ */ jsxs4("div", { className: "bg-zinc-900 text-white rounded-xl px-3 py-2 shadow-xl shadow-black/20 text-center whitespace-nowrap", children: [
+          /* @__PURE__ */ jsxs4("div", { className: "bg-foreground text-background rounded-xl px-3 py-2 shadow-xl shadow-black/20 text-center whitespace-nowrap", children: [
             /* @__PURE__ */ jsx9("p", { className: "text-[11px] font-semibold leading-none", children: tip.title }),
-            /* @__PURE__ */ jsx9("p", { className: "text-[10px] text-white/60 mt-1 leading-none", children: tip.desc })
+            /* @__PURE__ */ jsx9("p", { className: "text-[10px] text-background/60 mt-1 leading-none", children: tip.desc })
           ] }),
-          /* @__PURE__ */ jsx9("div", { className: "absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-zinc-900" })
+          /* @__PURE__ */ jsx9("div", { className: "absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-foreground" })
         ]
       }
     )
@@ -680,9 +680,9 @@ function ProductCard({ product, cardHref }) {
     Link,
     {
       href,
-      className: "group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:ring-offset-2 rounded-2xl",
-      children: /* @__PURE__ */ jsxs4("div", { className: "rounded-2xl bg-white shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200", children: [
-        /* @__PURE__ */ jsx9("div", { className: "relative aspect-square bg-[#f8f8f6] overflow-hidden rounded-t-2xl", children: imageUrl ? (
+      className: "group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-2xl",
+      children: /* @__PURE__ */ jsxs4("div", { className: "rounded-2xl bg-card border border-border shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200", children: [
+        /* @__PURE__ */ jsx9("div", { className: "relative aspect-square bg-muted overflow-hidden rounded-t-2xl", children: imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           /* @__PURE__ */ jsx9(
             "img",
@@ -693,13 +693,13 @@ function ProductCard({ product, cardHref }) {
               className: "w-full h-full object-contain p-2 group-hover:scale-[1.04] transition-transform duration-300 ease-out"
             }
           )
-        ) : /* @__PURE__ */ jsx9("div", { className: "w-full h-full flex items-center justify-center", children: /* @__PURE__ */ jsxs4("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1", className: "text-zinc-300", children: [
+        ) : /* @__PURE__ */ jsx9("div", { className: "w-full h-full flex items-center justify-center", children: /* @__PURE__ */ jsxs4("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1", className: "text-muted-foreground", children: [
           /* @__PURE__ */ jsx9("rect", { x: "3", y: "3", width: "18", height: "18", rx: "2" }),
           /* @__PURE__ */ jsx9("circle", { cx: "8.5", cy: "8.5", r: "1.5" }),
           /* @__PURE__ */ jsx9("path", { d: "m21 15-5-5L5 21" })
         ] }) }) }),
         /* @__PURE__ */ jsxs4("div", { className: "h-[104px] px-3 pt-2.5 pb-3 flex flex-col", children: [
-          /* @__PURE__ */ jsx9("p", { className: "text-[14px] font-semibold text-zinc-900 line-clamp-2 leading-[1.3]", children: name }),
+          /* @__PURE__ */ jsx9("p", { className: "text-[14px] font-semibold text-foreground line-clamp-2 leading-[1.3]", children: name }),
           /* @__PURE__ */ jsxs4("div", { className: "mt-auto flex gap-1.5", children: [
             /* @__PURE__ */ jsx9(
               ScoreBadge,
@@ -754,17 +754,17 @@ var OFF_API_BASE2 = "https://world.openfoodfacts.org/api/v2";
 var DEFAULT_FETCH_URL = `${OFF_API_BASE2}/search?countries_tags=en:canada&page_size=50&sort_by=unique_scans_n&fields=${DEFAULT_FIELDS}`;
 var _catalogCache = null;
 function CardSkeleton() {
-  return /* @__PURE__ */ jsxs5("div", { className: "rounded-2xl bg-white shadow-sm overflow-hidden animate-pulse", children: [
-    /* @__PURE__ */ jsx10("div", { className: "aspect-square bg-zinc-100" }),
+  return /* @__PURE__ */ jsxs5("div", { className: "rounded-2xl bg-card shadow-sm overflow-hidden animate-pulse", children: [
+    /* @__PURE__ */ jsx10("div", { className: "aspect-square bg-muted" }),
     /* @__PURE__ */ jsxs5("div", { className: "h-[104px] px-3 pt-2.5 pb-3 flex flex-col", children: [
       /* @__PURE__ */ jsxs5("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx10("div", { className: "h-3.5 bg-zinc-100 rounded w-4/5" }),
-        /* @__PURE__ */ jsx10("div", { className: "h-3.5 bg-zinc-100 rounded w-3/5" })
+        /* @__PURE__ */ jsx10("div", { className: "h-3.5 bg-muted rounded w-4/5" }),
+        /* @__PURE__ */ jsx10("div", { className: "h-3.5 bg-muted rounded w-3/5" })
       ] }),
       /* @__PURE__ */ jsxs5("div", { className: "mt-auto flex gap-1.5", children: [
-        /* @__PURE__ */ jsx10("div", { className: "flex-1 h-6 bg-zinc-100 rounded-lg" }),
-        /* @__PURE__ */ jsx10("div", { className: "flex-1 h-6 bg-zinc-100 rounded-lg" }),
-        /* @__PURE__ */ jsx10("div", { className: "flex-1 h-6 bg-zinc-100 rounded-lg" })
+        /* @__PURE__ */ jsx10("div", { className: "flex-1 h-6 bg-muted rounded-lg" }),
+        /* @__PURE__ */ jsx10("div", { className: "flex-1 h-6 bg-muted rounded-lg" }),
+        /* @__PURE__ */ jsx10("div", { className: "flex-1 h-6 bg-muted rounded-lg" })
       ] })
     ] })
   ] });
@@ -898,7 +898,7 @@ function ProductsPage({
     setFetchError(false);
     setFetchKey((k) => k + 1);
   }
-  return /* @__PURE__ */ jsxs5("main", { className: "max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6", children: [
+  return /* @__PURE__ */ jsx10("div", { className: "bg-background", children: /* @__PURE__ */ jsxs5("main", { className: "max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6", children: [
     /* @__PURE__ */ jsx10(PageHeader, { heading, countryTag, subtitle }),
     /* @__PURE__ */ jsx10(
       ProductsToolbar,
@@ -930,24 +930,24 @@ function ProductsPage({
         product.code
       )
     ) }) : /* @__PURE__ */ jsx10("div", { className: "text-center py-20 space-y-3", children: isSearchMode ? /* @__PURE__ */ jsxs5(Fragment2, { children: [
-      /* @__PURE__ */ jsx10("p", { className: "text-zinc-500 font-medium", children: "No results found" }),
-      /* @__PURE__ */ jsx10("p", { className: "text-sm text-zinc-400", children: "Try a different name or check the barcode" })
+      /* @__PURE__ */ jsx10("p", { className: "text-muted-foreground font-medium", children: "No results found" }),
+      /* @__PURE__ */ jsx10("p", { className: "text-sm text-muted-foreground", children: "Try a different name or check the barcode" })
     ] }) : fetchError ? /* @__PURE__ */ jsxs5(Fragment2, { children: [
-      /* @__PURE__ */ jsx10("p", { className: "text-zinc-500 font-medium", children: "Could not load products" }),
-      /* @__PURE__ */ jsx10("p", { className: "text-sm text-zinc-400", children: "Check your connection or try again." }),
+      /* @__PURE__ */ jsx10("p", { className: "text-muted-foreground font-medium", children: "Could not load products" }),
+      /* @__PURE__ */ jsx10("p", { className: "text-sm text-muted-foreground", children: "Check your connection or try again." }),
       /* @__PURE__ */ jsx10(
         "button",
         {
           onClick: retry,
-          className: "text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors",
+          className: "text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors",
           children: "Retry"
         }
       )
     ] }) : effectiveProducts.length === 0 ? /* @__PURE__ */ jsxs5(Fragment2, { children: [
-      /* @__PURE__ */ jsx10("p", { className: "text-zinc-500 font-medium", children: "No products found" }),
-      /* @__PURE__ */ jsx10("p", { className: "text-sm text-zinc-400", children: "The catalog appears to be empty." })
+      /* @__PURE__ */ jsx10("p", { className: "text-muted-foreground font-medium", children: "No products found" }),
+      /* @__PURE__ */ jsx10("p", { className: "text-sm text-muted-foreground", children: "The catalog appears to be empty." })
     ] }) : /* @__PURE__ */ jsxs5(Fragment2, { children: [
-      /* @__PURE__ */ jsxs5("p", { className: "text-zinc-500 font-medium", children: [
+      /* @__PURE__ */ jsxs5("p", { className: "text-muted-foreground font-medium", children: [
         "No products in ",
         activeCategory
       ] }),
@@ -955,12 +955,12 @@ function ProductsPage({
         "button",
         {
           onClick: () => setActiveCategory("All"),
-          className: "text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors",
+          className: "text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors",
           children: "Clear filter"
         }
       )
     ] }) })
-  ] });
+  ] }) });
 }
 async function defaultSearchFn(query) {
   const controller = new AbortController();
@@ -1000,8 +1000,8 @@ async function defaultSearchFn(query) {
 // src/components/section-card.tsx
 import { jsx as jsx11, jsxs as jsxs6 } from "react/jsx-runtime";
 function SectionCard({ label, children }) {
-  return /* @__PURE__ */ jsxs6("div", { className: "rounded-2xl border border-zinc-200/60 bg-white p-6", children: [
-    /* @__PURE__ */ jsx11("p", { className: "text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5", children: label }),
+  return /* @__PURE__ */ jsxs6("div", { className: "rounded-2xl border border-border bg-card p-6", children: [
+    /* @__PURE__ */ jsx11("p", { className: "text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-5", children: label }),
     children
   ] });
 }
@@ -1042,7 +1042,7 @@ function ProductHero({ product }) {
   const imageUrl = product.image_front_url || product.image_url;
   return /* @__PURE__ */ jsxs7("div", { className: "flex flex-col md:flex-row gap-8 md:gap-12 items-start", children: [
     /* @__PURE__ */ jsxs7("div", { className: "relative w-full md:w-72 md:shrink-0", children: [
-      /* @__PURE__ */ jsx12("div", { className: "relative aspect-square rounded-2xl overflow-hidden bg-[#f8f8f6] border border-zinc-200/60", children: imageUrl ? (
+      /* @__PURE__ */ jsx12("div", { className: "relative aspect-square rounded-2xl overflow-hidden bg-muted border border-border", children: imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         /* @__PURE__ */ jsx12(
           "img",
@@ -1052,44 +1052,44 @@ function ProductHero({ product }) {
             className: "w-full h-full object-contain p-6"
           }
         )
-      ) : /* @__PURE__ */ jsx12("div", { className: "w-full h-full flex items-center justify-center text-zinc-200", children: /* @__PURE__ */ jsxs7("svg", { width: "80", height: "80", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1", children: [
+      ) : /* @__PURE__ */ jsx12("div", { className: "w-full h-full flex items-center justify-center text-muted-foreground", children: /* @__PURE__ */ jsxs7("svg", { width: "80", height: "80", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1", children: [
         /* @__PURE__ */ jsx12("rect", { x: "3", y: "3", width: "18", height: "18", rx: "2" }),
         /* @__PURE__ */ jsx12("circle", { cx: "8.5", cy: "8.5", r: "1.5" }),
         /* @__PURE__ */ jsx12("path", { d: "m21 15-5-5L5 21" })
       ] }) }) }),
-      product.quantity && /* @__PURE__ */ jsx12("p", { className: "text-xs text-zinc-400 text-center mt-2", children: product.quantity })
+      product.quantity && /* @__PURE__ */ jsx12("p", { className: "text-xs text-muted-foreground text-center mt-2", children: product.quantity })
     ] }),
     /* @__PURE__ */ jsxs7("div", { className: "flex-1 space-y-4", children: [
-      brand && /* @__PURE__ */ jsx12("p", { className: "text-sm font-medium text-zinc-500 uppercase tracking-widest", children: brand }),
-      /* @__PURE__ */ jsx12("h1", { className: "text-3xl md:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight", children: name }),
-      category && /* @__PURE__ */ jsx12("p", { className: "text-base text-zinc-500", children: category }),
-      (grade || nova || ecoGrade) && /* @__PURE__ */ jsxs7("div", { className: "rounded-xl border border-zinc-200/60 bg-zinc-50 grid grid-cols-3 divide-x divide-zinc-200/60 mt-2", children: [
+      brand && /* @__PURE__ */ jsx12("p", { className: "text-sm font-medium text-muted-foreground uppercase tracking-widest", children: brand }),
+      /* @__PURE__ */ jsx12("h1", { className: "text-3xl md:text-4xl font-semibold text-foreground leading-tight tracking-tight", children: name }),
+      category && /* @__PURE__ */ jsx12("p", { className: "text-base text-muted-foreground", children: category }),
+      (grade || nova || ecoGrade) && /* @__PURE__ */ jsxs7("div", { className: "rounded-xl border border-border bg-muted grid grid-cols-3 divide-x divide-border mt-2", children: [
         /* @__PURE__ */ jsxs7("div", { className: "flex flex-col gap-2 p-4", children: [
           /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
-            grade ? /* @__PURE__ */ jsx12("div", { className: `w-8 h-8 shrink-0 rounded-full ${getNutriScoreColor(grade)} flex items-center justify-center shadow-sm`, children: /* @__PURE__ */ jsx12("span", { className: "text-white text-sm font-bold", children: grade.toUpperCase() }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-zinc-400 text-sm font-bold", children: "?" }) }),
-            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-zinc-700", children: "Nutri-Score" })
+            grade ? /* @__PURE__ */ jsx12("div", { className: `w-8 h-8 shrink-0 rounded-full ${getNutriScoreColor(grade)} flex items-center justify-center shadow-sm`, children: /* @__PURE__ */ jsx12("span", { className: "text-white text-sm font-bold", children: grade.toUpperCase() }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-accent flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-muted-foreground text-sm font-bold", children: "?" }) }),
+            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-foreground", children: "Nutri-Score" })
           ] }),
-          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-zinc-400 leading-snug", children: NUTRI_DESCRIPTIONS[grade ?? ""] ?? "Not rated" })
+          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-muted-foreground leading-snug", children: NUTRI_DESCRIPTIONS[grade ?? ""] ?? "Not rated" })
         ] }),
         /* @__PURE__ */ jsxs7("div", { className: "flex flex-col gap-2 p-4", children: [
           /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
-            nova ? /* @__PURE__ */ jsx12("div", { className: `w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${NOVA_LABELS[nova]?.color ?? "bg-zinc-200 text-zinc-400"}`, children: /* @__PURE__ */ jsx12("span", { className: "text-sm font-bold", children: nova }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-zinc-400 text-sm font-bold", children: "?" }) }),
-            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-zinc-700", children: "NOVA" })
+            nova ? /* @__PURE__ */ jsx12("div", { className: `w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${NOVA_LABELS[nova]?.color ?? "bg-accent text-muted-foreground"}`, children: /* @__PURE__ */ jsx12("span", { className: "text-sm font-bold", children: nova }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-accent flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-muted-foreground text-sm font-bold", children: "?" }) }),
+            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-foreground", children: "NOVA" })
           ] }),
-          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-zinc-400 leading-snug", children: nova ? NOVA_LABELS[nova]?.desc ?? "Unknown" : "Not rated" })
+          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-muted-foreground leading-snug", children: nova ? NOVA_LABELS[nova]?.desc ?? "Unknown" : "Not rated" })
         ] }),
         /* @__PURE__ */ jsxs7("div", { className: "flex flex-col gap-2 p-4", children: [
           /* @__PURE__ */ jsxs7("div", { className: "flex items-center gap-2", children: [
-            ecoGrade ? /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-[#FFA551]/20 border border-[#FFA551]/30 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-[#C47A00] text-sm font-bold uppercase", children: ecoGrade }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-zinc-400 text-sm font-bold", children: "?" }) }),
-            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-zinc-700", children: "Eco-Score" })
+            ecoGrade ? /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-primary text-sm font-bold uppercase", children: ecoGrade }) }) : /* @__PURE__ */ jsx12("div", { className: "w-8 h-8 shrink-0 rounded-full bg-accent flex items-center justify-center", children: /* @__PURE__ */ jsx12("span", { className: "text-muted-foreground text-sm font-bold", children: "?" }) }),
+            /* @__PURE__ */ jsx12("p", { className: "text-xs font-semibold text-foreground", children: "Eco-Score" })
           ] }),
-          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-zinc-400 leading-snug", children: ECO_DESCRIPTIONS[ecoGrade ?? ""] ?? "Not rated" })
+          /* @__PURE__ */ jsx12("p", { className: "text-[11px] text-muted-foreground leading-snug", children: ECO_DESCRIPTIONS[ecoGrade ?? ""] ?? "Not rated" })
         ] })
       ] }),
-      labels.length > 0 && /* @__PURE__ */ jsx12("div", { className: "flex flex-wrap gap-2", children: labels.map((label) => /* @__PURE__ */ jsx12(Badge, { variant: "outline", className: "text-xs font-normal rounded-full border-zinc-200", children: label }, label)) }),
-      product.serving_size && /* @__PURE__ */ jsxs7("p", { className: "text-xs text-zinc-400", children: [
+      labels.length > 0 && /* @__PURE__ */ jsx12("div", { className: "flex flex-wrap gap-2", children: labels.map((label) => /* @__PURE__ */ jsx12(Badge, { variant: "outline", className: "text-xs font-normal rounded-full border-border", children: label }, label)) }),
+      product.serving_size && /* @__PURE__ */ jsxs7("p", { className: "text-xs text-muted-foreground", children: [
         "Serving size: ",
-        /* @__PURE__ */ jsx12("span", { className: "font-medium text-zinc-900", children: product.serving_size })
+        /* @__PURE__ */ jsx12("span", { className: "font-medium text-foreground", children: product.serving_size })
       ] })
     ] })
   ] });
@@ -1100,16 +1100,16 @@ import { Fragment as Fragment3, jsx as jsx13, jsxs as jsxs8 } from "react/jsx-ru
 function MacroCard({ label, value, unit, color, max, description }) {
   const displayValue = value != null ? Math.round(value * 10) / 10 : null;
   const percent = value != null ? Math.min(value / max * 100, 100) : 0;
-  return /* @__PURE__ */ jsxs8("div", { className: "p-4 rounded-xl border border-zinc-200/60 bg-white space-y-3", children: [
+  return /* @__PURE__ */ jsxs8("div", { className: "p-4 rounded-xl border border-border bg-card space-y-3", children: [
     /* @__PURE__ */ jsxs8("div", { className: "flex items-start justify-between", children: [
       /* @__PURE__ */ jsxs8("div", { children: [
-        /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-500 font-medium uppercase tracking-wide", children: label }),
-        description && /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-400 mt-0.5", children: description })
+        /* @__PURE__ */ jsx13("p", { className: "text-xs text-muted-foreground font-medium uppercase tracking-wide", children: label }),
+        description && /* @__PURE__ */ jsx13("p", { className: "text-xs text-muted-foreground mt-0.5", children: description })
       ] }),
       /* @__PURE__ */ jsx13("div", { className: "text-right", children: displayValue != null ? /* @__PURE__ */ jsxs8(Fragment3, { children: [
-        /* @__PURE__ */ jsx13("span", { className: "text-xl font-semibold text-zinc-900 tabular-nums", children: displayValue }),
-        /* @__PURE__ */ jsx13("span", { className: "text-xs text-zinc-400 ml-1", children: unit })
-      ] }) : /* @__PURE__ */ jsx13("span", { className: "text-sm text-zinc-400", children: "\u2014" }) })
+        /* @__PURE__ */ jsx13("span", { className: "text-xl font-semibold text-foreground tabular-nums", children: displayValue }),
+        /* @__PURE__ */ jsx13("span", { className: "text-xs text-muted-foreground ml-1", children: unit })
+      ] }) : /* @__PURE__ */ jsx13("span", { className: "text-sm text-muted-foreground", children: "\u2014" }) })
     ] }),
     /* @__PURE__ */ jsx13(
       Progress,
@@ -1119,7 +1119,7 @@ function MacroCard({ label, value, unit, color, max, description }) {
         style: { "--progress-color": color }
       }
     ),
-    /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-400", children: "per 100g" })
+    /* @__PURE__ */ jsx13("p", { className: "text-xs text-muted-foreground", children: "per 100g" })
   ] });
 }
 function CalorieRing({ calories }) {
@@ -1127,10 +1127,10 @@ function CalorieRing({ calories }) {
   const percent = Math.min(calories / dailyTarget * 100, 100);
   const circumference = 2 * Math.PI * 40;
   const strokeDash = percent / 100 * circumference;
-  return /* @__PURE__ */ jsxs8("div", { className: "p-5 rounded-xl border border-zinc-200/60 bg-white flex items-center gap-5", children: [
+  return /* @__PURE__ */ jsxs8("div", { className: "p-5 rounded-xl border border-border bg-card flex items-center gap-5", children: [
     /* @__PURE__ */ jsxs8("div", { className: "relative w-24 h-24 shrink-0", children: [
       /* @__PURE__ */ jsxs8("svg", { viewBox: "0 0 100 100", className: "w-full h-full -rotate-90", children: [
-        /* @__PURE__ */ jsx13("circle", { cx: "50", cy: "50", r: "40", fill: "none", stroke: "currentColor", strokeWidth: "8", className: "text-zinc-200" }),
+        /* @__PURE__ */ jsx13("circle", { cx: "50", cy: "50", r: "40", fill: "none", stroke: "currentColor", strokeWidth: "8", className: "text-muted" }),
         /* @__PURE__ */ jsx13(
           "circle",
           {
@@ -1142,19 +1142,19 @@ function CalorieRing({ calories }) {
             strokeWidth: "8",
             strokeLinecap: "round",
             strokeDasharray: `${strokeDash} ${circumference}`,
-            className: "text-orange-400 transition-all duration-700"
+            className: "text-primary transition-all duration-700"
           }
         )
       ] }),
       /* @__PURE__ */ jsxs8("div", { className: "absolute inset-0 flex flex-col items-center justify-center", children: [
-        /* @__PURE__ */ jsx13("span", { className: "text-lg font-bold tabular-nums", children: Math.round(calories) }),
-        /* @__PURE__ */ jsx13("span", { className: "text-xs text-zinc-400", children: "kcal" })
+        /* @__PURE__ */ jsx13("span", { className: "text-lg font-bold tabular-nums text-foreground", children: Math.round(calories) }),
+        /* @__PURE__ */ jsx13("span", { className: "text-xs text-muted-foreground", children: "kcal" })
       ] })
     ] }),
     /* @__PURE__ */ jsxs8("div", { className: "space-y-1", children: [
-      /* @__PURE__ */ jsx13("p", { className: "font-semibold text-zinc-900", children: "Calories" }),
-      /* @__PURE__ */ jsx13("p", { className: "text-sm text-zinc-500", children: "per 100g" }),
-      /* @__PURE__ */ jsxs8("p", { className: "text-xs text-zinc-400", children: [
+      /* @__PURE__ */ jsx13("p", { className: "font-semibold text-foreground", children: "Calories" }),
+      /* @__PURE__ */ jsx13("p", { className: "text-sm text-muted-foreground", children: "per 100g" }),
+      /* @__PURE__ */ jsxs8("p", { className: "text-xs text-muted-foreground", children: [
         Math.round(percent),
         "% of ",
         dailyTarget.toLocaleString(),
@@ -1166,11 +1166,11 @@ function CalorieRing({ calories }) {
 function ProductNutrition({ product }) {
   const n = product.nutriments;
   if (!n) {
-    return /* @__PURE__ */ jsx13("div", { className: "text-center py-10 text-zinc-500", children: /* @__PURE__ */ jsx13("p", { children: "Nutrition data not available for this product." }) });
+    return /* @__PURE__ */ jsx13("div", { className: "text-center py-10 text-muted-foreground", children: /* @__PURE__ */ jsx13("p", { children: "Nutrition data not available for this product." }) });
   }
   const calories = n.energy_kcal_100g;
   return /* @__PURE__ */ jsxs8("div", { className: "space-y-4", children: [
-    /* @__PURE__ */ jsx13("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsx13("p", { className: "text-xs text-zinc-400", children: "All values per 100g unless noted" }) }),
+    /* @__PURE__ */ jsx13("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsx13("p", { className: "text-xs text-muted-foreground", children: "All values per 100g unless noted" }) }),
     calories != null && /* @__PURE__ */ jsx13(CalorieRing, { calories }),
     /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-2 gap-3", children: [
       /* @__PURE__ */ jsx13(MacroCard, { label: "Protein", value: n.proteins_100g, unit: "g", color: "#4ade80", max: 30, description: "Muscle & repair" }),
@@ -1253,7 +1253,7 @@ function highlightIngredients(text, allergens) {
     (part, i) => part.isAllergen ? /* @__PURE__ */ jsx14(
       "mark",
       {
-        className: "bg-amber-100 text-amber-900 rounded px-0.5 not-italic font-medium",
+        className: "bg-amber-900/50 text-amber-200 rounded px-0.5 not-italic font-medium",
         children: part.text
       },
       i
@@ -1267,36 +1267,36 @@ function ProductIngredients({ product }) {
   const text = product.ingredients_text_en || product.ingredients_text || "";
   const isLong = text.length > 300;
   return /* @__PURE__ */ jsxs9("div", { className: "space-y-5", children: [
-    allergens.length > 0 && /* @__PURE__ */ jsxs9("div", { className: "p-4 rounded-xl border border-amber-200 bg-amber-50 space-y-2", children: [
+    allergens.length > 0 && /* @__PURE__ */ jsxs9("div", { className: "p-4 rounded-xl border border-amber-900/40 bg-amber-950/30 space-y-2", children: [
       /* @__PURE__ */ jsxs9("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsxs9("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", className: "text-amber-600", children: [
+        /* @__PURE__ */ jsxs9("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", className: "text-amber-400", children: [
           /* @__PURE__ */ jsx14("path", { d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" }),
           /* @__PURE__ */ jsx14("path", { d: "M12 9v4" }),
           /* @__PURE__ */ jsx14("path", { d: "M12 17h.01" })
         ] }),
-        /* @__PURE__ */ jsx14("p", { className: "text-sm font-semibold text-amber-800", children: "Allergen Information" })
+        /* @__PURE__ */ jsx14("p", { className: "text-sm font-semibold text-amber-200", children: "Allergen Information" })
       ] }),
-      /* @__PURE__ */ jsx14("div", { className: "flex flex-wrap gap-1.5", children: allergens.map((a) => /* @__PURE__ */ jsx14(Badge, { className: "bg-amber-200 text-amber-900 hover:bg-amber-200 text-xs font-medium border-0", children: a }, a)) })
+      /* @__PURE__ */ jsx14("div", { className: "flex flex-wrap gap-1.5", children: allergens.map((a) => /* @__PURE__ */ jsx14(Badge, { className: "bg-amber-900/50 text-amber-200 hover:bg-amber-900/50 text-xs font-medium border-0", children: a }, a)) })
     ] }),
     text ? /* @__PURE__ */ jsxs9("div", { className: "space-y-2", children: [
-      /* @__PURE__ */ jsx14("h3", { className: "text-sm font-semibold text-zinc-900", children: "Ingredients" }),
-      /* @__PURE__ */ jsxs9("div", { className: "text-sm text-zinc-500 leading-relaxed", children: [
+      /* @__PURE__ */ jsx14("h3", { className: "text-sm font-semibold text-foreground", children: "Ingredients" }),
+      /* @__PURE__ */ jsxs9("div", { className: "text-sm text-muted-foreground leading-relaxed", children: [
         /* @__PURE__ */ jsx14("p", { className: !expanded && isLong ? "line-clamp-4" : "", children: highlightIngredients(text, allergens) }),
         isLong && /* @__PURE__ */ jsx14(
           "button",
           {
             onClick: () => setExpanded(!expanded),
-            className: "text-xs text-[#FFA551] font-medium mt-2 hover:underline",
+            className: "text-xs text-primary font-medium mt-2 hover:underline",
             children: expanded ? "Show less" : "Show full ingredients"
           }
         )
       ] }),
-      allergens.length > 0 && /* @__PURE__ */ jsx14("p", { className: "text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg inline-block", children: "Highlighted ingredients may contain allergens" })
-    ] }) : /* @__PURE__ */ jsx14("p", { className: "text-sm text-zinc-400", children: "Ingredients list not available." }),
+      allergens.length > 0 && /* @__PURE__ */ jsx14("p", { className: "text-xs text-amber-300 bg-amber-950/30 px-3 py-1.5 rounded-lg inline-block", children: "Highlighted ingredients may contain allergens" })
+    ] }) : /* @__PURE__ */ jsx14("p", { className: "text-sm text-muted-foreground", children: "Ingredients list not available." }),
     additives.length > 0 && /* @__PURE__ */ jsxs9("div", { className: "space-y-2", children: [
-      /* @__PURE__ */ jsx14("h3", { className: "text-sm font-semibold text-zinc-900", children: "Additives" }),
-      /* @__PURE__ */ jsx14("div", { className: "flex flex-wrap gap-1.5", children: additives.map((a) => /* @__PURE__ */ jsx14(Badge, { variant: "outline", className: "text-xs font-mono text-zinc-500 border-zinc-200/60", children: a }, a)) }),
-      /* @__PURE__ */ jsxs9("p", { className: "text-xs text-zinc-400", children: [
+      /* @__PURE__ */ jsx14("h3", { className: "text-sm font-semibold text-foreground", children: "Additives" }),
+      /* @__PURE__ */ jsx14("div", { className: "flex flex-wrap gap-1.5", children: additives.map((a) => /* @__PURE__ */ jsx14(Badge, { variant: "outline", className: "text-xs font-mono text-muted-foreground border-border", children: a }, a)) }),
+      /* @__PURE__ */ jsxs9("p", { className: "text-xs text-muted-foreground", children: [
         additives.length,
         " additive",
         additives.length !== 1 ? "s" : "",
@@ -1311,28 +1311,28 @@ import { useEffect as useEffect2, useState as useState3 } from "react";
 import { Fragment as Fragment5, jsx as jsx15, jsxs as jsxs10 } from "react/jsx-runtime";
 function DefaultSkeleton() {
   return /* @__PURE__ */ jsxs10("div", { className: "space-y-4 animate-pulse", children: [
-    /* @__PURE__ */ jsx15("div", { className: "rounded-2xl border border-zinc-200/60 bg-white p-6", children: /* @__PURE__ */ jsxs10("div", { className: "flex flex-col md:flex-row gap-8 md:gap-12 items-start", children: [
-      /* @__PURE__ */ jsx15("div", { className: "w-full md:w-72 md:shrink-0 aspect-square rounded-2xl bg-zinc-100" }),
+    /* @__PURE__ */ jsx15("div", { className: "rounded-2xl border border-border bg-card p-6", children: /* @__PURE__ */ jsxs10("div", { className: "flex flex-col md:flex-row gap-8 md:gap-12 items-start", children: [
+      /* @__PURE__ */ jsx15("div", { className: "w-full md:w-72 md:shrink-0 aspect-square rounded-2xl bg-muted" }),
       /* @__PURE__ */ jsxs10("div", { className: "flex-1 space-y-4 w-full", children: [
-        /* @__PURE__ */ jsx15("div", { className: "h-3 w-24 bg-zinc-100 rounded" }),
-        /* @__PURE__ */ jsx15("div", { className: "h-8 w-2/3 bg-zinc-100 rounded" }),
-        /* @__PURE__ */ jsx15("div", { className: "h-4 w-1/3 bg-zinc-100 rounded" }),
-        /* @__PURE__ */ jsx15("div", { className: "h-20 w-full bg-zinc-100 rounded-xl" })
+        /* @__PURE__ */ jsx15("div", { className: "h-3 w-24 bg-muted rounded" }),
+        /* @__PURE__ */ jsx15("div", { className: "h-8 w-2/3 bg-muted rounded" }),
+        /* @__PURE__ */ jsx15("div", { className: "h-4 w-1/3 bg-muted rounded" }),
+        /* @__PURE__ */ jsx15("div", { className: "h-20 w-full bg-muted rounded-xl" })
       ] })
     ] }) }),
-    /* @__PURE__ */ jsx15("div", { className: "h-40 rounded-2xl bg-zinc-100" }),
-    /* @__PURE__ */ jsx15("div", { className: "h-40 rounded-2xl bg-zinc-100" })
+    /* @__PURE__ */ jsx15("div", { className: "h-40 rounded-2xl bg-muted" }),
+    /* @__PURE__ */ jsx15("div", { className: "h-40 rounded-2xl bg-muted" })
   ] });
 }
 function DefaultNotFound({ backHref, backLabel }) {
   return /* @__PURE__ */ jsxs10("div", { className: "text-center py-20 space-y-3", children: [
-    /* @__PURE__ */ jsx15("p", { className: "text-zinc-500 font-medium", children: "Product not found" }),
-    /* @__PURE__ */ jsx15("p", { className: "text-sm text-zinc-400", children: "Check the barcode and try again." }),
+    /* @__PURE__ */ jsx15("p", { className: "text-muted-foreground font-medium", children: "Product not found" }),
+    /* @__PURE__ */ jsx15("p", { className: "text-sm text-muted-foreground", children: "Check the barcode and try again." }),
     /* @__PURE__ */ jsx15(
       "a",
       {
         href: backHref,
-        className: "text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors inline-block",
+        className: "text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors inline-block",
         children: backLabel
       }
     )
@@ -1385,15 +1385,15 @@ function ProductDetailPage({
   }
   const resolvedProduct = fetchedProduct;
   return /* @__PURE__ */ jsxs10("div", { className: "space-y-4", children: [
-    /* @__PURE__ */ jsx15("div", { className: "rounded-2xl border border-zinc-200/60 bg-white p-6", children: renderHero ? renderHero(resolvedProduct) : /* @__PURE__ */ jsx15(ProductHero, { product: resolvedProduct }) }),
+    /* @__PURE__ */ jsx15("div", { className: "rounded-2xl border border-border bg-card p-6", children: renderHero ? renderHero(resolvedProduct) : /* @__PURE__ */ jsx15(ProductHero, { product: resolvedProduct }) }),
     showNutrition && /* @__PURE__ */ jsx15(SectionCard, { label: "Nutrition", children: renderNutrition ? renderNutrition(resolvedProduct) : /* @__PURE__ */ jsx15(ProductNutrition, { product: resolvedProduct }) }),
     showIngredients && /* @__PURE__ */ jsx15(SectionCard, { label: "Ingredients", children: renderIngredients ? renderIngredients(resolvedProduct) : /* @__PURE__ */ jsx15(ProductIngredients, { product: resolvedProduct }) }),
     extraSections?.(resolvedProduct),
     showAttribution && /* @__PURE__ */ jsxs10("div", { className: "pt-2 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3", children: [
-      /* @__PURE__ */ jsxs10("div", { className: "space-y-1 text-xs text-zinc-400", children: [
+      /* @__PURE__ */ jsxs10("div", { className: "space-y-1 text-xs text-muted-foreground", children: [
         /* @__PURE__ */ jsxs10("p", { children: [
           "Barcode: ",
-          /* @__PURE__ */ jsx15("span", { className: "font-mono font-medium text-zinc-600", children: resolvedProduct.code })
+          /* @__PURE__ */ jsx15("span", { className: "font-mono font-medium text-foreground", children: resolvedProduct.code })
         ] }),
         /* @__PURE__ */ jsxs10("p", { children: [
           "Data from",
@@ -1404,7 +1404,7 @@ function ProductDetailPage({
               href: `https://world.openfoodfacts.org/product/${resolvedProduct.code}`,
               target: "_blank",
               rel: "noopener noreferrer",
-              className: "underline underline-offset-2 hover:text-zinc-700 transition-colors",
+              className: "underline underline-offset-2 hover:text-foreground transition-colors",
               children: "Open Food Facts \u2197"
             }
           ),
@@ -1412,7 +1412,7 @@ function ProductDetailPage({
           "\xB7 ODbL license"
         ] })
       ] }),
-      /* @__PURE__ */ jsxs10("a", { href: backHref, className: "text-xs text-zinc-400 hover:text-zinc-700 transition-colors", children: [
+      /* @__PURE__ */ jsxs10("a", { href: backHref, className: "text-xs text-muted-foreground hover:text-foreground transition-colors", children: [
         "\u2190 ",
         backLabel
       ] })

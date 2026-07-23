@@ -19,20 +19,20 @@ function MacroCard({ label, value, unit, color, max, description }: MacroCardPro
   const percent = value != null ? Math.min((value / max) * 100, 100) : 0;
 
   return (
-    <div className="p-4 rounded-xl border border-zinc-200/60 bg-white space-y-3">
+    <div className="p-4 rounded-xl border border-border bg-card space-y-3">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">{label}</p>
-          {description && <p className="text-xs text-zinc-400 mt-0.5">{description}</p>}
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{label}</p>
+          {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
         </div>
         <div className="text-right">
           {displayValue != null ? (
             <>
-              <span className="text-xl font-semibold text-zinc-900 tabular-nums">{displayValue}</span>
-              <span className="text-xs text-zinc-400 ml-1">{unit}</span>
+              <span className="text-xl font-semibold text-foreground tabular-nums">{displayValue}</span>
+              <span className="text-xs text-muted-foreground ml-1">{unit}</span>
             </>
           ) : (
-            <span className="text-sm text-zinc-400">—</span>
+            <span className="text-sm text-muted-foreground">—</span>
           )}
         </div>
       </div>
@@ -41,7 +41,7 @@ function MacroCard({ label, value, unit, color, max, description }: MacroCardPro
         className="h-1.5"
         style={{ "--progress-color": color } as React.CSSProperties}
       />
-      <p className="text-xs text-zinc-400">per 100g</p>
+      <p className="text-xs text-muted-foreground">per 100g</p>
     </div>
   );
 }
@@ -53,10 +53,10 @@ function CalorieRing({ calories }: { calories: number }) {
   const strokeDash = (percent / 100) * circumference;
 
   return (
-    <div className="p-5 rounded-xl border border-zinc-200/60 bg-white flex items-center gap-5">
+    <div className="p-5 rounded-xl border border-border bg-card flex items-center gap-5">
       <div className="relative w-24 h-24 shrink-0">
         <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-          <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="8" className="text-zinc-200" />
+          <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted" />
           <circle
             cx="50"
             cy="50"
@@ -66,18 +66,18 @@ function CalorieRing({ calories }: { calories: number }) {
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={`${strokeDash} ${circumference}`}
-            className="text-orange-400 transition-all duration-700"
+            className="text-primary transition-all duration-700"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-lg font-bold tabular-nums">{Math.round(calories)}</span>
-          <span className="text-xs text-zinc-400">kcal</span>
+          <span className="text-lg font-bold tabular-nums text-foreground">{Math.round(calories)}</span>
+          <span className="text-xs text-muted-foreground">kcal</span>
         </div>
       </div>
       <div className="space-y-1">
-        <p className="font-semibold text-zinc-900">Calories</p>
-        <p className="text-sm text-zinc-500">per 100g</p>
-        <p className="text-xs text-zinc-400">
+        <p className="font-semibold text-foreground">Calories</p>
+        <p className="text-sm text-muted-foreground">per 100g</p>
+        <p className="text-xs text-muted-foreground">
           {Math.round(percent)}% of {dailyTarget.toLocaleString()} kcal daily reference
         </p>
       </div>
@@ -89,7 +89,7 @@ export function ProductNutrition({ product }: ProductNutritionProps) {
   const n = product.nutriments;
   if (!n) {
     return (
-      <div className="text-center py-10 text-zinc-500">
+      <div className="text-center py-10 text-muted-foreground">
         <p>Nutrition data not available for this product.</p>
       </div>
     );
@@ -100,7 +100,7 @@ export function ProductNutrition({ product }: ProductNutritionProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-zinc-400">All values per 100g unless noted</p>
+        <p className="text-xs text-muted-foreground">All values per 100g unless noted</p>
       </div>
 
       {calories != null && <CalorieRing calories={calories} />}

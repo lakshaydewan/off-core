@@ -7,8 +7,8 @@ export interface SectionCardProps {
 
 export function SectionCard({ label, children }: SectionCardProps) {
   return (
-    <div className="rounded-2xl border border-zinc-200/60 bg-white p-6">
-      <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">{label}</p>
+    <div className="rounded-2xl border border-border bg-card p-6">
+      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-5">{label}</p>
       {children}
     </div>
   );

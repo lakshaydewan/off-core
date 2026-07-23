@@ -36,24 +36,24 @@ function PluginOption({ name, description, avatar, selected, onSelect }: PluginO
       onClick={onSelect}
       className={`w-full text-left flex items-center gap-3.5 px-4 py-3.5 rounded-xl border transition-all duration-150 ${
         selected
-          ? "border-zinc-900 bg-zinc-50"
-          : "border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50/50"
+          ? "border-primary bg-primary/10"
+          : "border-border bg-card hover:border-border hover:bg-accent/50"
       }`}
     >
       <div className="shrink-0">{avatar}</div>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm leading-none mb-1 ${selected ? "font-semibold text-zinc-900" : "font-medium text-zinc-700"}`}>
+        <p className={`text-sm leading-none mb-1 ${selected ? "font-semibold text-foreground" : "font-medium text-foreground"}`}>
           {name}
         </p>
-        <p className="text-[12px] text-zinc-400 leading-snug">{description}</p>
+        <p className="text-[12px] text-muted-foreground leading-snug">{description}</p>
       </div>
 
       <div
         className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-150 ${
           selected
-            ? "border-zinc-900 bg-zinc-900 text-white"
-            : "border-zinc-300"
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-border"
         }`}
       >
         {selected && <CheckIcon />}
@@ -116,17 +116,17 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
         role="dialog"
         aria-modal
         aria-label="Settings"
-        className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl shadow-black/[0.12] flex flex-col overflow-hidden"
+        className="relative w-full max-w-sm bg-card rounded-2xl shadow-2xl shadow-black/[0.12] flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-zinc-100">
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
           <div>
-            <h2 className="text-base font-semibold text-zinc-900 leading-none">Settings</h2>
-            <p className="text-[12px] text-zinc-400 mt-1">Customise your browsing experience</p>
+            <h2 className="text-base font-semibold text-foreground leading-none">Settings</h2>
+            <p className="text-[12px] text-muted-foreground mt-1">Customise your browsing experience</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
             aria-label="Close"
           >
             <XIcon />
@@ -135,7 +135,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
 
         {/* Body */}
         <div className="px-5 py-4 space-y-2 overflow-y-auto max-h-[60vh]">
-          <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">
             Active Lens
           </p>
 
@@ -145,7 +145,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
             name="No Plugin"
             description="Standard browsing with scores and search."
             avatar={
-              <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-400 text-[13px] font-semibold">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-[13px] font-semibold">
                 —
               </div>
             }
@@ -154,7 +154,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
           />
 
           {ALL_PLUGINS.length > 0 && (
-            <div className="h-px bg-zinc-100 my-1" />
+            <div className="h-px bg-border my-1" />
           )}
 
           {/* Plugin options */}
@@ -165,7 +165,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
               name={plugin.name}
               description={plugin.description ?? ""}
               avatar={
-                <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center text-white text-[13px] font-bold">
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground text-[13px] font-bold">
                   {plugin.name[0].toUpperCase()}
                 </div>
               }
@@ -176,16 +176,16 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 px-5 py-4 border-t border-zinc-100">
+        <div className="flex items-center justify-end gap-2.5 px-5 py-4 border-t border-border">
           <button
             onClick={onClose}
-            className="h-9 px-4 rounded-xl text-sm font-medium text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
+            className="h-9 px-4 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={save}
-            className="h-9 px-4 rounded-xl text-sm font-semibold bg-zinc-900 text-white hover:bg-zinc-700 transition-colors"
+            className="h-9 px-4 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/80 transition-colors"
           >
             Save
           </button>

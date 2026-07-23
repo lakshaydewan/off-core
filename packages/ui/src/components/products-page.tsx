@@ -27,17 +27,17 @@ let _catalogCache: { url: string; products: OFFProduct[] } | null = null;
 
 function CardSkeleton() {
   return (
-    <div className="rounded-2xl bg-white shadow-sm overflow-hidden animate-pulse">
-      <div className="aspect-square bg-zinc-100" />
+    <div className="rounded-2xl bg-card shadow-sm overflow-hidden animate-pulse">
+      <div className="aspect-square bg-muted" />
       <div className="h-[104px] px-3 pt-2.5 pb-3 flex flex-col">
         <div className="space-y-1.5">
-          <div className="h-3.5 bg-zinc-100 rounded w-4/5" />
-          <div className="h-3.5 bg-zinc-100 rounded w-3/5" />
+          <div className="h-3.5 bg-muted rounded w-4/5" />
+          <div className="h-3.5 bg-muted rounded w-3/5" />
         </div>
         <div className="mt-auto flex gap-1.5">
-          <div className="flex-1 h-6 bg-zinc-100 rounded-lg" />
-          <div className="flex-1 h-6 bg-zinc-100 rounded-lg" />
-          <div className="flex-1 h-6 bg-zinc-100 rounded-lg" />
+          <div className="flex-1 h-6 bg-muted rounded-lg" />
+          <div className="flex-1 h-6 bg-muted rounded-lg" />
+          <div className="flex-1 h-6 bg-muted rounded-lg" />
         </div>
       </div>
     </div>
@@ -270,84 +270,86 @@ export function ProductsPage({
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-      <PageHeader heading={heading} countryTag={countryTag} subtitle={subtitle} />
+    <div className="bg-background">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        <PageHeader heading={heading} countryTag={countryTag} subtitle={subtitle} />
 
-      <ProductsToolbar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        isSearching={isSearching}
-        categories={categories}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-        sort={sort}
-        onSortChange={setSort}
-        isSearchMode={isSearchMode}
-        isBarcode={isBarcode}
-        resultCount={sorted.length}
-        totalCount={totalCount}
-        stickyTop={stickyTop}
-        showCategories={showCategories}
-        showSort={showSort}
-      />
+        <ProductsToolbar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          isSearching={isSearching}
+          categories={categories}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          sort={sort}
+          onSortChange={setSort}
+          isSearchMode={isSearchMode}
+          isBarcode={isBarcode}
+          resultCount={sorted.length}
+          totalCount={totalCount}
+          stickyTop={stickyTop}
+          showCategories={showCategories}
+          showSort={showSort}
+        />
 
-      {isIdle ? (
-        idleSlot ? idleSlot(setSearchQuery) : null
-      ) : isLoadingCatalog || isSearching ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)}
-        </div>
-      ) : sorted.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {sorted.map((product, i) =>
-            renderCard ? (
-              <Fragment key={product.code}>{renderCard(product, i)}</Fragment>
+        {isIdle ? (
+          idleSlot ? idleSlot(setSearchQuery) : null
+        ) : isLoadingCatalog || isSearching ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)}
+          </div>
+        ) : sorted.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {sorted.map((product, i) =>
+              renderCard ? (
+                <Fragment key={product.code}>{renderCard(product, i)}</Fragment>
+              ) : (
+                <ProductCard
+                  key={product.code}
+                  product={product}
+                  cardHref={cardHref}
+                />
+              )
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-20 space-y-3">
+            {isSearchMode ? (
+              <>
+                <p className="text-muted-foreground font-medium">No results found</p>
+                <p className="text-sm text-muted-foreground">Try a different name or check the barcode</p>
+              </>
+            ) : fetchError ? (
+              <>
+                <p className="text-muted-foreground font-medium">Could not load products</p>
+                <p className="text-sm text-muted-foreground">Check your connection or try again.</p>
+                <button
+                  onClick={retry}
+                  className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
+                >
+                  Retry
+                </button>
+              </>
+            ) : effectiveProducts.length === 0 ? (
+              <>
+                <p className="text-muted-foreground font-medium">No products found</p>
+                <p className="text-sm text-muted-foreground">The catalog appears to be empty.</p>
+              </>
             ) : (
-              <ProductCard
-                key={product.code}
-                product={product}
-                cardHref={cardHref}
-              />
-            )
-          )}
-        </div>
-      ) : (
-        <div className="text-center py-20 space-y-3">
-          {isSearchMode ? (
-            <>
-              <p className="text-zinc-500 font-medium">No results found</p>
-              <p className="text-sm text-zinc-400">Try a different name or check the barcode</p>
-            </>
-          ) : fetchError ? (
-            <>
-              <p className="text-zinc-500 font-medium">Could not load products</p>
-              <p className="text-sm text-zinc-400">Check your connection or try again.</p>
-              <button
-                onClick={retry}
-                className="text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors"
-              >
-                Retry
-              </button>
-            </>
-          ) : effectiveProducts.length === 0 ? (
-            <>
-              <p className="text-zinc-500 font-medium">No products found</p>
-              <p className="text-sm text-zinc-400">The catalog appears to be empty.</p>
-            </>
-          ) : (
-            <>
-              <p className="text-zinc-500 font-medium">No products in {activeCategory}</p>
-              <button
-                onClick={() => setActiveCategory("All")}
-                className="text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors"
-              >
-                Clear filter
-              </button>
-            </>
-          )}
-        </div>
-      )}
-    </main>
+              <>
+                <p className="text-muted-foreground font-medium">No products in {activeCategory}</p>
+                <button
+                  onClick={() => setActiveCategory("All")}
+                  className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
+                >
+                  Clear filter
+                </button>
+              </>
+            )}
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
 

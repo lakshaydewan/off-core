@@ -34,13 +34,13 @@ export function SettingsButton() {
         aria-label="Open settings"
         className={`relative flex items-center justify-center w-8 h-8 rounded-lg border transition-all duration-150 ${
           pluginId
-            ? "border-zinc-300 bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
-            : "border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:text-zinc-800"
+            ? "border-border bg-accent text-foreground hover:bg-accent/70"
+            : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
         }`}
       >
         <GearIcon />
         {pluginId && (
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#FFA551] border-2 border-white" />
+          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-primary border-2 border-card" />
         )}
       </button>
 

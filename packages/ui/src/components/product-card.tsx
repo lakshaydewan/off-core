@@ -43,8 +43,8 @@ function ScoreBadge({ label, value, style, tip }: ScoreBadgeProps) {
   return (
     <div className="relative group/score flex-1">
       {isMissing ? (
-        <div className="flex items-center justify-center py-1.5 rounded-lg bg-zinc-100 w-full">
-          <span className="text-[10px] font-medium text-zinc-300">?</span>
+        <div className="flex items-center justify-center py-1.5 rounded-lg bg-muted w-full">
+          <span className="text-[10px] font-medium text-muted-foreground">?</span>
         </div>
       ) : (
         <div className={`flex items-center justify-between px-2 py-1.5 rounded-lg text-[10px] w-full ${style}`}>
@@ -61,11 +61,11 @@ function ScoreBadge({ label, value, style, tip }: ScoreBadgeProps) {
           transition-all duration-150 ease-out
         "
       >
-        <div className="bg-zinc-900 text-white rounded-xl px-3 py-2 shadow-xl shadow-black/20 text-center whitespace-nowrap">
+        <div className="bg-foreground text-background rounded-xl px-3 py-2 shadow-xl shadow-black/20 text-center whitespace-nowrap">
           <p className="text-[11px] font-semibold leading-none">{tip.title}</p>
-          <p className="text-[10px] text-white/60 mt-1 leading-none">{tip.desc}</p>
+          <p className="text-[10px] text-background/60 mt-1 leading-none">{tip.desc}</p>
         </div>
-        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-zinc-900" />
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-foreground" />
       </div>
     </div>
   );
@@ -100,10 +100,10 @@ export function ProductCard({ product, cardHref }: ProductCardProps) {
   return (
     <Link
       href={href}
-      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 focus-visible:ring-offset-2 rounded-2xl"
+      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-2xl"
     >
-      <div className="rounded-2xl bg-white shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200">
-        <div className="relative aspect-square bg-[#f8f8f6] overflow-hidden rounded-t-2xl">
+      <div className="rounded-2xl bg-card border border-border shadow-sm group-hover:shadow-md group-hover:-translate-y-0.5 transition-all duration-200">
+        <div className="relative aspect-square bg-muted overflow-hidden rounded-t-2xl">
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -114,7 +114,7 @@ export function ProductCard({ product, cardHref }: ProductCardProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-zinc-300">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-muted-foreground">
                 <rect x="3" y="3" width="18" height="18" rx="2" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <path d="m21 15-5-5L5 21" />
@@ -124,7 +124,7 @@ export function ProductCard({ product, cardHref }: ProductCardProps) {
         </div>
 
         <div className="h-[104px] px-3 pt-2.5 pb-3 flex flex-col">
-          <p className="text-[14px] font-semibold text-zinc-900 line-clamp-2 leading-[1.3]">
+          <p className="text-[14px] font-semibold text-foreground line-clamp-2 leading-[1.3]">
             {name}
           </p>
 

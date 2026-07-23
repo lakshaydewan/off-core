@@ -1,6 +1,6 @@
 {
   "name": "@lakshaydewan/off-ui",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "OFF design system — shared UI components and theme tokens",
   "type": "module",
   "exports": {

@@ -56,7 +56,7 @@ export function ProductHero({ product }: ProductHeroProps) {
     <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
       {/* Product image */}
       <div className="relative w-full md:w-72 md:shrink-0">
-        <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#f8f8f6] border border-zinc-200/60">
+        <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted border border-border">
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -65,7 +65,7 @@ export function ProductHero({ product }: ProductHeroProps) {
               className="w-full h-full object-contain p-6"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-zinc-200">
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
               <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
                 <rect x="3" y="3" width="18" height="18" rx="2" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
@@ -75,23 +75,23 @@ export function ProductHero({ product }: ProductHeroProps) {
           )}
         </div>
         {product.quantity && (
-          <p className="text-xs text-zinc-400 text-center mt-2">{product.quantity}</p>
+          <p className="text-xs text-muted-foreground text-center mt-2">{product.quantity}</p>
         )}
       </div>
 
       {/* Product info */}
       <div className="flex-1 space-y-4">
         {brand && (
-          <p className="text-sm font-medium text-zinc-500 uppercase tracking-widest">{brand}</p>
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest">{brand}</p>
         )}
-        <h1 className="text-3xl md:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight">{name}</h1>
+        <h1 className="text-3xl md:text-4xl font-semibold text-foreground leading-tight tracking-tight">{name}</h1>
         {category && (
-          <p className="text-base text-zinc-500">{category}</p>
+          <p className="text-base text-muted-foreground">{category}</p>
         )}
 
         {/* Scores card */}
         {(grade || nova || ecoGrade) && (
-          <div className="rounded-xl border border-zinc-200/60 bg-zinc-50 grid grid-cols-3 divide-x divide-zinc-200/60 mt-2">
+          <div className="rounded-xl border border-border bg-muted grid grid-cols-3 divide-x divide-border mt-2">
 
             {/* Nutri-Score */}
             <div className="flex flex-col gap-2 p-4">
@@ -101,13 +101,13 @@ export function ProductHero({ product }: ProductHeroProps) {
                     <span className="text-white text-sm font-bold">{grade.toUpperCase()}</span>
                   </div>
                 ) : (
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center">
-                    <span className="text-zinc-400 text-sm font-bold">?</span>
+                  <div className="w-8 h-8 shrink-0 rounded-full bg-accent flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm font-bold">?</span>
                   </div>
                 )}
-                <p className="text-xs font-semibold text-zinc-700">Nutri-Score</p>
+                <p className="text-xs font-semibold text-foreground">Nutri-Score</p>
               </div>
-              <p className="text-[11px] text-zinc-400 leading-snug">
+              <p className="text-[11px] text-muted-foreground leading-snug">
                 {NUTRI_DESCRIPTIONS[grade ?? ""] ?? "Not rated"}
               </p>
             </div>
@@ -116,17 +116,17 @@ export function ProductHero({ product }: ProductHeroProps) {
             <div className="flex flex-col gap-2 p-4">
               <div className="flex items-center gap-2">
                 {nova ? (
-                  <div className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${NOVA_LABELS[nova]?.color ?? "bg-zinc-200 text-zinc-400"}`}>
+                  <div className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${NOVA_LABELS[nova]?.color ?? "bg-accent text-muted-foreground"}`}>
                     <span className="text-sm font-bold">{nova}</span>
                   </div>
                 ) : (
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center">
-                    <span className="text-zinc-400 text-sm font-bold">?</span>
+                  <div className="w-8 h-8 shrink-0 rounded-full bg-accent flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm font-bold">?</span>
                   </div>
                 )}
-                <p className="text-xs font-semibold text-zinc-700">NOVA</p>
+                <p className="text-xs font-semibold text-foreground">NOVA</p>
               </div>
-              <p className="text-[11px] text-zinc-400 leading-snug">
+              <p className="text-[11px] text-muted-foreground leading-snug">
                 {nova ? NOVA_LABELS[nova]?.desc ?? "Unknown" : "Not rated"}
               </p>
             </div>
@@ -135,17 +135,17 @@ export function ProductHero({ product }: ProductHeroProps) {
             <div className="flex flex-col gap-2 p-4">
               <div className="flex items-center gap-2">
                 {ecoGrade ? (
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-[#FFA551]/20 border border-[#FFA551]/30 flex items-center justify-center">
-                    <span className="text-[#C47A00] text-sm font-bold uppercase">{ecoGrade}</span>
+                  <div className="w-8 h-8 shrink-0 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                    <span className="text-primary text-sm font-bold uppercase">{ecoGrade}</span>
                   </div>
                 ) : (
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-zinc-200 flex items-center justify-center">
-                    <span className="text-zinc-400 text-sm font-bold">?</span>
+                  <div className="w-8 h-8 shrink-0 rounded-full bg-accent flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm font-bold">?</span>
                   </div>
                 )}
-                <p className="text-xs font-semibold text-zinc-700">Eco-Score</p>
+                <p className="text-xs font-semibold text-foreground">Eco-Score</p>
               </div>
-              <p className="text-[11px] text-zinc-400 leading-snug">
+              <p className="text-[11px] text-muted-foreground leading-snug">
                 {ECO_DESCRIPTIONS[ecoGrade ?? ""] ?? "Not rated"}
               </p>
             </div>
@@ -157,7 +157,7 @@ export function ProductHero({ product }: ProductHeroProps) {
         {labels.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {labels.map((label) => (
-              <Badge key={label} variant="outline" className="text-xs font-normal rounded-full border-zinc-200">
+              <Badge key={label} variant="outline" className="text-xs font-normal rounded-full border-border">
                 {label}
               </Badge>
             ))}
@@ -166,8 +166,8 @@ export function ProductHero({ product }: ProductHeroProps) {
 
         {/* Quick stats */}
         {product.serving_size && (
-          <p className="text-xs text-zinc-400">
-            Serving size: <span className="font-medium text-zinc-900">{product.serving_size}</span>
+          <p className="text-xs text-muted-foreground">
+            Serving size: <span className="font-medium text-foreground">{product.serving_size}</span>
           </p>
         )}
       </div>

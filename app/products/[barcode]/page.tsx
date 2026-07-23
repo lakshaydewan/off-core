@@ -24,13 +24,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-background">
       {/* Nav */}
-      <nav className="border-b border-zinc-200/60 sticky top-0 bg-white z-30">
+      <nav className="border-b border-border sticky top-0 bg-card z-30">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/">
             <Image
-              src="https://static.openfoodfacts.org/images/logos/off-logo-horizontal-light.svg"
+              src="https://static.openfoodfacts.org/images/logos/off-logo-horizontal-dark.svg"
               alt="Open Food Facts"
               width={120}
               height={30}
@@ -41,7 +41,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <SettingsButton />
             <Link
               href="/products"
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               ← Products
             </Link>

@@ -75,39 +75,39 @@ export function ProductsToolbar({
       <select
         value={sort}
         onChange={(e) => onSortChange(e.target.value as SortKey)}
-        className="appearance-none bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-700 text-xs font-medium pl-3 pr-6 py-1.5 rounded-full cursor-pointer focus:outline-none transition-colors"
+        className="appearance-none bg-muted hover:bg-accent text-muted-foreground hover:text-foreground text-xs font-medium pl-3 pr-6 py-1.5 rounded-full cursor-pointer focus:outline-none transition-colors"
       >
         <option value="default">Popular</option>
         <option value="name">A – Z</option>
         <option value="nutriscore">Nutri-Score</option>
         <option value="calories">Calories</option>
       </select>
-      <ChevronIcon className="absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-400 pointer-events-none" />
+      <ChevronIcon className="absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
     </div>
   );
 
   return (
-    <div className={`sticky ${stickyTop} z-20 bg-zinc-50 pt-2 pb-4 space-y-3 -mx-4 px-4 sm:-mx-6 sm:px-6`}>
+    <div className={`sticky ${stickyTop} z-20 bg-background pt-2 pb-4 space-y-3 -mx-4 px-4 sm:-mx-6 sm:px-6`}>
 
       {/* Search bar */}
       <div className="relative">
-        <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+        <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
         <input
           ref={inputRef}
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search by name or barcode…"
-          className="w-full h-10 bg-white rounded-xl border border-zinc-200 pl-10 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#FFA551]/20 focus:border-[#FFA551]/50 transition-colors shadow-sm"
+          className="w-full h-10 bg-card rounded-xl border border-border pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-colors shadow-sm"
         />
         {isSearching ? (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-zinc-200 border-t-[#FFA551] animate-spin" />
+          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-border border-t-primary animate-spin" />
         ) : searchQuery ? (
           <button
             onClick={() => { onSearchChange(""); inputRef.current?.focus(); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-muted hover:bg-accent transition-colors"
           >
-            <XIcon className="w-3 h-3 text-zinc-600" />
+            <XIcon className="w-3 h-3 text-foreground" />
           </button>
         ) : null}
       </div>
@@ -116,7 +116,7 @@ export function ProductsToolbar({
       {isSearchMode ? (
         (showSort || !isSearching) && (
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-muted-foreground">
               {isSearching
                 ? "Searching…"
                 : isBarcode
@@ -137,8 +137,8 @@ export function ProductsToolbar({
                   className={cn(
                     "shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap",
                     activeCategory === cat
-                      ? "bg-[#FFA551] text-white shadow-sm"
-                      : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-700"
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
                   )}
                 >
                   {cat}
@@ -152,9 +152,9 @@ export function ProductsToolbar({
 
       {/* Divider + count */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-px bg-zinc-200" />
+        <div className="flex-1 h-px bg-border" />
         {!isSearchMode && (
-          <p className="text-[11px] text-zinc-400 shrink-0">
+          <p className="text-[11px] text-muted-foreground shrink-0">
             {resultCount === totalCount
               ? `${totalCount} products`
               : `${resultCount} of ${totalCount}`}

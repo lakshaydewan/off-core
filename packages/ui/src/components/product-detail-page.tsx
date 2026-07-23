@@ -65,19 +65,19 @@ export interface ProductDetailPageProps {
 function DefaultSkeleton() {
   return (
     <div className="space-y-4 animate-pulse">
-      <div className="rounded-2xl border border-zinc-200/60 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
-          <div className="w-full md:w-72 md:shrink-0 aspect-square rounded-2xl bg-zinc-100" />
+          <div className="w-full md:w-72 md:shrink-0 aspect-square rounded-2xl bg-muted" />
           <div className="flex-1 space-y-4 w-full">
-            <div className="h-3 w-24 bg-zinc-100 rounded" />
-            <div className="h-8 w-2/3 bg-zinc-100 rounded" />
-            <div className="h-4 w-1/3 bg-zinc-100 rounded" />
-            <div className="h-20 w-full bg-zinc-100 rounded-xl" />
+            <div className="h-3 w-24 bg-muted rounded" />
+            <div className="h-8 w-2/3 bg-muted rounded" />
+            <div className="h-4 w-1/3 bg-muted rounded" />
+            <div className="h-20 w-full bg-muted rounded-xl" />
           </div>
         </div>
       </div>
-      <div className="h-40 rounded-2xl bg-zinc-100" />
-      <div className="h-40 rounded-2xl bg-zinc-100" />
+      <div className="h-40 rounded-2xl bg-muted" />
+      <div className="h-40 rounded-2xl bg-muted" />
     </div>
   );
 }
@@ -85,11 +85,11 @@ function DefaultSkeleton() {
 function DefaultNotFound({ backHref, backLabel }: { backHref: string; backLabel: string }) {
   return (
     <div className="text-center py-20 space-y-3">
-      <p className="text-zinc-500 font-medium">Product not found</p>
-      <p className="text-sm text-zinc-400">Check the barcode and try again.</p>
+      <p className="text-muted-foreground font-medium">Product not found</p>
+      <p className="text-sm text-muted-foreground">Check the barcode and try again.</p>
       <a
         href={backHref}
-        className="text-xs text-zinc-400 hover:text-zinc-700 underline underline-offset-2 transition-colors inline-block"
+        className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors inline-block"
       >
         {backLabel}
       </a>
@@ -154,7 +154,7 @@ export function ProductDetailPage({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-zinc-200/60 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         {renderHero ? renderHero(resolvedProduct) : <ProductHero product={resolvedProduct} />}
       </div>
 
@@ -174,9 +174,9 @@ export function ProductDetailPage({
 
       {showAttribution && (
         <div className="pt-2 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="space-y-1 text-xs text-zinc-400">
+          <div className="space-y-1 text-xs text-muted-foreground">
             <p>
-              Barcode: <span className="font-mono font-medium text-zinc-600">{resolvedProduct.code}</span>
+              Barcode: <span className="font-mono font-medium text-foreground">{resolvedProduct.code}</span>
             </p>
             <p>
               Data from{" "}
@@ -184,14 +184,14 @@ export function ProductDetailPage({
                 href={`https://world.openfoodfacts.org/product/${resolvedProduct.code}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-zinc-700 transition-colors"
+                className="underline underline-offset-2 hover:text-foreground transition-colors"
               >
                 Open Food Facts ↗
               </a>{" "}
               · ODbL license
             </p>
           </div>
-          <a href={backHref} className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
+          <a href={backHref} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
             ← {backLabel}
           </a>
         </div>

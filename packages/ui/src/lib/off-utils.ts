@@ -101,7 +101,7 @@ const GRADE_BADGE: Record<string, string> = {
   d: "bg-orange-500 text-white",
   e: "bg-red-500 text-white",
 };
-const GRADE_BADGE_MISSING = "bg-zinc-100 text-zinc-400";
+const GRADE_BADGE_MISSING = "bg-muted text-muted-foreground";
 
 export function getNutriScorePillStyle(grade?: string): string {
   return GRADE_BADGE[grade?.toLowerCase() ?? ""] ?? GRADE_BADGE_MISSING;

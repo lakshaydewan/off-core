@@ -69,7 +69,7 @@ function highlightIngredients(text: string, allergens: string[]): React.ReactEle
         part.isAllergen ? (
           <mark
             key={i}
-            className="bg-amber-100 text-amber-900 rounded px-0.5 not-italic font-medium"
+            className="bg-amber-900/50 text-amber-200 rounded px-0.5 not-italic font-medium"
           >
             {part.text}
           </mark>
@@ -92,18 +92,18 @@ export function ProductIngredients({ product }: ProductIngredientsProps) {
     <div className="space-y-5">
       {/* Allergen summary */}
       {allergens.length > 0 && (
-        <div className="p-4 rounded-xl border border-amber-200 bg-amber-50 space-y-2">
+        <div className="p-4 rounded-xl border border-amber-900/40 bg-amber-950/30 space-y-2">
           <div className="flex items-center gap-2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-400">
               <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
               <path d="M12 9v4" />
               <path d="M12 17h.01" />
             </svg>
-            <p className="text-sm font-semibold text-amber-800">Allergen Information</p>
+            <p className="text-sm font-semibold text-amber-200">Allergen Information</p>
           </div>
           <div className="flex flex-wrap gap-1.5">
             {allergens.map((a) => (
-              <Badge key={a} className="bg-amber-200 text-amber-900 hover:bg-amber-200 text-xs font-medium border-0">
+              <Badge key={a} className="bg-amber-900/50 text-amber-200 hover:bg-amber-900/50 text-xs font-medium border-0">
                 {a}
               </Badge>
             ))}
@@ -114,42 +114,42 @@ export function ProductIngredients({ product }: ProductIngredientsProps) {
       {/* Ingredients text */}
       {text ? (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-zinc-900">Ingredients</h3>
-          <div className="text-sm text-zinc-500 leading-relaxed">
+          <h3 className="text-sm font-semibold text-foreground">Ingredients</h3>
+          <div className="text-sm text-muted-foreground leading-relaxed">
             <p className={!expanded && isLong ? "line-clamp-4" : ""}>
               {highlightIngredients(text, allergens)}
             </p>
             {isLong && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-[#FFA551] font-medium mt-2 hover:underline"
+                className="text-xs text-primary font-medium mt-2 hover:underline"
               >
                 {expanded ? "Show less" : "Show full ingredients"}
               </button>
             )}
           </div>
           {allergens.length > 0 && (
-            <p className="text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg inline-block">
+            <p className="text-xs text-amber-300 bg-amber-950/30 px-3 py-1.5 rounded-lg inline-block">
               Highlighted ingredients may contain allergens
             </p>
           )}
         </div>
       ) : (
-        <p className="text-sm text-zinc-400">Ingredients list not available.</p>
+        <p className="text-sm text-muted-foreground">Ingredients list not available.</p>
       )}
 
       {/* Additives */}
       {additives.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-zinc-900">Additives</h3>
+          <h3 className="text-sm font-semibold text-foreground">Additives</h3>
           <div className="flex flex-wrap gap-1.5">
             {additives.map((a) => (
-              <Badge key={a} variant="outline" className="text-xs font-mono text-zinc-500 border-zinc-200/60">
+              <Badge key={a} variant="outline" className="text-xs font-mono text-muted-foreground border-border">
                 {a}
               </Badge>
             ))}
           </div>
-          <p className="text-xs text-zinc-400">{additives.length} additive{additives.length !== 1 ? "s" : ""} detected</p>
+          <p className="text-xs text-muted-foreground">{additives.length} additive{additives.length !== 1 ? "s" : ""} detected</p>
         </div>
       )}
     </div>
