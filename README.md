@@ -7,7 +7,7 @@ A modern product experience built on top of [Open Food Facts](https://world.open
 A UI/UX prototype exploring what a cleaner, more modern Open Food Facts product page could look like — with a focus on:
 
 - **Information architecture** — presenting dense nutrition data without overwhelming the user
-- **Plugin-based insight cards** — contextual views like Gym Mode, Parent Mode, Allergy Mode
+- **Plugin-based insight cards** — contextual views like Gym Mode, Compare Products, NL Search
 - **Mobile-first design** — inspired by Apple Health, Linear, and modern nutrition apps
 
 This is a frontend-only exploration. No backend, no database, no search engine — just real OFF API data presented through a thoughtful UI.
@@ -41,7 +41,7 @@ components/
   hero-section.tsx           # Product image, name, brand, labels
   nutrition-overview.tsx     # Calories, macros, visual indicators
   ingredients-panel.tsx      # Ingredients with allergen/additive highlights
-  plugin-cards.tsx           # Gym / Parent / Allergy insight cards
+  plugin-cards.tsx           # Contextual plugin insight cards
   product-card.tsx           # Listing card
 lib/
   off-api.ts                 # Open Food Facts API helpers

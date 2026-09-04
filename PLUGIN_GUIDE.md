@@ -92,15 +92,15 @@ Open `lib/plugin-registry.ts` and add one import and one array entry:
 
 ```ts
 import { gymPlugin } from "./plugins/gym";
-import { parentPlugin } from "./plugins/parent";
 import { nlSearchPlugin } from "./plugins/nl-search";
+import { compareProductsPlugin } from "./plugins/compare-products";
 import { yourPlugin } from "./plugins/your-plugin"; // ← add this
 import type { Plugin } from "./plugin-types";
 
 export const ALL_PLUGINS: Plugin[] = [
   gymPlugin,
-  parentPlugin,
   nlSearchPlugin,
+  compareProductsPlugin,
   yourPlugin, // ← add this
 ];
 ```
@@ -244,4 +244,4 @@ standalone if you'd rather compose your own layout than use the full page.
 |---|---|---|
 | NL Search | `http://localhost:3001` | `NEXT_PUBLIC_NL_SEARCH_URL` *(unused, hardcoded)* |
 | Gym | `http://localhost:3002` | `NEXT_PUBLIC_GYM_PLUGIN_URL` |
-| Parent | `http://localhost:3003` | `NEXT_PUBLIC_PARENT_PLUGIN_URL` |
+| Compare Products | `http://localhost:3004` | `NEXT_PUBLIC_COMPARE_PRODUCTS_PLUGIN_URL` |
